@@ -26,14 +26,21 @@ def convert_good_to_bad_board(good_board):
 if __name__=='__main__':
     gm.init()
     gm.print_board()
-    coord = input("Give the y value and the x value as, for example, if y = 5, x = 5, input the following: 55")
-    y_val = int(coord[0])
-    x_val = int(coord[1])
-    gm.move(y_val, x_val, 1)
-    gm.print_board()
-    coord = input("Give the y value and the x value as, for example, if y = 5 , x = 5, input the following: 55")
-    x_val - int(coord[0])
-    y_val = int(coord[1])
-    gm.move(y_val, x_val, 2)
-    gm.print_board()
+
+    turns = 0
+    while(gm.is_win() == 0):
+        y = int(input("\nyval"))
+        x = int(input("\nxval"))
+        if turns % 2 == 0:
+            if gm.move(y,x,1) == 0:
+                turns += 1
+                gm.print_board()
+        else:
+            if gm.move(y,x,2) == 0:
+                turns += 1
+                gm.print_board()
+
+
+
+    
 
