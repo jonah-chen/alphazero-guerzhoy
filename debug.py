@@ -2,7 +2,7 @@
 
 import numpy as np
 # from gomoku import print_board
-import trainGomoku as gm 
+import trainGomoku as gm
 
 def random_board(shape, bad=False):
     board = np.random.randint(-1,2,size=shape)
@@ -26,3 +26,14 @@ def convert_good_to_bad_board(good_board):
 if __name__=='__main__':
     gm.init()
     gm.print_board()
+    coord = input("Give the y value and the x value as, for example, if y = 5, x = 5, input the following: 55")
+    y_val = int(coord[0])
+    x_val = int(coord[1])
+    gm.move(y_val, x_val, 1)
+    gm.print_board()
+    coord = input("Give the y value and the x value as, for example, if y = 5 , x = 5, input the following: 55")
+    x_val - int(coord[0])
+    y_val = int(coord[1])
+    gm.move(y_val, x_val, 2)
+    gm.print_board()
+
