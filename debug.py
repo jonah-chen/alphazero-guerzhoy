@@ -26,7 +26,6 @@ def convert_good_to_bad_board(good_board):
 if __name__=='__main__':
     gm.init()
     gm.print_board()
-
     turns = 0
     while(gm.is_win() == 0):
         y = int(input("\nyval"))
