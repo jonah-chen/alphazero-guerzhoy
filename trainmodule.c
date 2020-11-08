@@ -67,7 +67,7 @@ static int Cis_win(void)
                         board[y + 4][x + 4] == 2)
                         return 2;
                 }
-                if (y - 4 < SIZE)
+                if (y - 4 >= 0)
                 {
                     if (board[y][x] == 1 &&
                         board[y - 1][x + 1] == 1 && 
