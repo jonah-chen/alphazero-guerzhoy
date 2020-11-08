@@ -9,7 +9,7 @@
 				"-g",
 				"${file}",
 				"-o",
-				"${fileDirname}/${fileBasenameNoExtension}", "-I/usr/include/python3.8", "-lpython3.8"
+				"${fileDirname}/${fileBasenameNoExtension}", "-I/usr/include/python3.8", "-I/home/hina/anaconda3/lib/python3.8/site-packages/numpy/core/include", "-lpython3.8"
 			],
 			"options": {
 				"cwd": "/usr/bin"

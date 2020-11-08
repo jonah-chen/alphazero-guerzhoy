@@ -3,7 +3,7 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**", "/usr/include/python3.8"
+                "${workspaceFolder}/**", "/usr/include/python3.8", "/home/hina/anaconda3/lib/python3.8/site-packages/numpy/core/include"
             ],
             "defines": [],
             "cStandard": "gnu17",

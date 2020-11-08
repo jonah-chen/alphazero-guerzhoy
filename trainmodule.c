@@ -22,7 +22,7 @@ static char convert(unsigned char c)
         return 'b';
     if (c == 2)
         return 'w';
-    return NULL;
+    return 'e';
 }
 
 static int Cis_win(void)
@@ -187,11 +187,11 @@ version(PyObject *self)
 }
 
 static PyMethodDef myMethods[] = {
-    {"init", init, METH_NOARGS, "Initialize the game by setting all board squares to empty(0)."},
-    {"print_board", print_board, METH_NOARGS, "DEBUG: Prints the board in human-readable notation."},
+    {"init", (PyCFunction) init, METH_NOARGS, "Initialize the game by setting all board squares to empty(0)."},
+    {"print_board", (PyCFunction) print_board, METH_NOARGS, "DEBUG: Prints the board in human-readable notation."},
     {"move", move, METH_VARARGS, "Make a move for player p at (y,x)=(y,x). Safe Method: If attempts to override a previous move, the move will not be made and returns -1."},
     {"force_move", force_move, METH_VARARGS, "DEBUG: Change position (y,x) on the board to p. WARNING: CAN CAUSE UNEXPECTED ISSUE."},
-    {"is_win", is_win, METH_NOARGS, "Return the index corresponding to the game state in this array [\"Continue Playing\", \"Black won\", \"White won\", \"Draw\"]"},
+    {"is_win", (PyCFunction) is_win, METH_NOARGS, "Return the index corresponding to the game state in this array [\"Continue Playing\", \"Black won\", \"White won\", \"Draw\"]"},
     {"version", (PyCFunction) version, METH_NOARGS, "Return the version number."},
     {NULL, NULL, 0, NULL}
 };
