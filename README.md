@@ -4,14 +4,13 @@ IN PROGRESS
 
 Mastering gomoku using the General Reinforcement Learning Algorithm from DeepMind in the paper published here: https://arxiv.org/pdf/1712.01815.pdf. Entry to the ESC180 gomoku class contest for Gomoku after project 2 (basic computer player based on rule based system).
 
-Completed:
-Game
-Optimize game
+Completed:  
+Game  
+Optimize game  
 
-TODO:
-Find a way to convert board to numpy array for training
-Write neural network
-Write Monte-Carlo Tree Search(MCTS) Algorithm
-Debug
-Train network
+TODO:  
+Write neural network  
+Write Monte-Carlo Tree Search(MCTS) Algorithm  
+Debug  
+Train network  
 Win!
