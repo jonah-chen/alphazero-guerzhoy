@@ -21,9 +21,9 @@ class Game:
     def move(self, y, x, player):
         if(player != 1 and player != 2) or self.board[y, x, 0] or self.board[y, x, 1]:
             raise ValueError
-        self.board[y, x, player] = 1.0
+        self.board[y, x, player - 1] = 1.0
 
 
     def force_move(self, y, x, player):
-        self.board[y, x, player] = 1.0
+        self.board[y, x, player - 1] = 1.0
 
