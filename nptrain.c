@@ -7,7 +7,7 @@ static PyObject*
 is_win(PyObject* self, PyObject* args) {
     PyObject *list3_obj;
     if (!PyArg_ParseTuple(args, "O", &list3_obj))
-    return NULL;
+        return NULL;
 
     double ***board;
 
@@ -16,9 +16,10 @@ is_win(PyObject* self, PyObject* args) {
     PyArray_Descr *descr;
     descr = PyArray_DescrFromType(typenum);
     npy_intp dims[3];
-    if (PyArray_AsCArray(&list3_obj, (void ***)&board, dims, 3, descr) < 0) {
-    PyErr_SetString(PyExc_TypeError, "error converting to c array");
-    return NULL;
+    if (PyArray_AsCArray(&list3_obj, (void ***)&board, dims, 3, descr) < 0) 
+    {
+        PyErr_SetString(PyExc_TypeError, "error converting to c array");
+        return NULL;
     }
     
     int y = SIZE;
