@@ -221,7 +221,8 @@ def iswin(board):
                 if (temp_2 == ["w"] * 5):
                     return 0
 
-            # diagonal case:
+            # diagonal cases:
+            # first case: increasing the row number and the column number:
             if i + 4 < len(board) and j + 4 < len(board):
                 temp = []
                 for a in range(5):
@@ -229,6 +230,15 @@ def iswin(board):
                 if (temp == ["b"] * 5):
                     return 1
                 if (temp == ["w"] * 5):
+                    return 0
+            # second case: increasing the row number but decreasing the column number:
+            if i + 4 < len(board) and j - 4 < len(board):
+                temp_3 = []
+                for d in range(5):
+                    temp_3.append(board[i+d][j-d])
+                if (temp_3 == ["b"] * 5):
+                    return 1
+                if (temp_3 == ["w"] * 5):
                     return 0
     
     if draw:

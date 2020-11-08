@@ -2,7 +2,7 @@
 
 import numpy as np
 # from gomoku import print_board
-
+import trainGomoku as gm 
 
 def random_board(shape, bad=False):
     board = np.random.randint(-1,2,size=shape)
@@ -24,4 +24,5 @@ def convert_good_to_bad_board(good_board):
     return bad_board
 
 if __name__=='__main__':
-    pass
+    gm.init()
+    gm.print_board()

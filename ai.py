@@ -5,7 +5,7 @@ from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Conv2D, Conv1D, Dense, MaxPooling2D, Dropout, BatchNormalization, Flatten
 
 # Some basic metrics to assist the first training attempts
-from gomoku import is_win, score
+
 
 class Game:
     def __init__(self, size):
