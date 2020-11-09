@@ -7,9 +7,9 @@ Mastering gomoku using the General Reinforcement Learning Algorithm from DeepMin
 Completed:  
 Game  
 Optimize game  
+Write neural network  
 
 TODO:  
-Write neural network  
 Write Monte-Carlo Tree Search(MCTS) Algorithm  
 Debug  
 Train network  
