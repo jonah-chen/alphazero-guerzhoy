@@ -1,5 +1,3 @@
-from concurrent.futures import ProcessPoolExecutor
-
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.callbacks import TensorBoard
@@ -9,43 +7,6 @@ from tensorflow.keras.layers import Input, Conv2D, Dense, BatchNormalization, Fl
 from nptrain import is_win
 
 LOC = "saved_models"
-
-class Game:
-    def __init__(self, black=np.zeros((8, 8, 2,), dtype=np.float32), white=np.zeros((8, 8, 2,), dtype=np.float32)):
-        '''Creates a more optimized Gomoku game to train the A.I.'''
-
-        # The stones will be stored in a way to feed into the neural network
-        # One's own stones are stored on [y, x, 0] 
-        # and the opponent's stones are stored on [y, x, 1]
-
-        # The black is where the game is played from the black's perspective 
-        # Player 1's stones are stored on black[y, x, 0]
-        # Player 2's stones are stored on black[y, x, 1]
-        self.black = black
-
-        # The white is where the game is played from the white's perspective 
-        # Player 2's stones are stored on white[y, x, 0]
-        # Player 1's stones are stored on white[y, x, 1]
-        self.white = white
-
-    def is_win(self):
-        '''Return the game state as the index in the array ["White won", "Black won", "Draw", "Continue Playing"]'''
-        return is_win(self.black)
-
-
-    def move(self, y, x, player):
-        '''Play a move for the player player and returns 1 if the move fails.'''
-        if(player != 1 and player != 2) or self.black[y, x, 0] or self.black[y, x, 1]:
-            return 1
-        self.black[y, x, player - 1] = 1.0
-        self.white[y, x, player - 2] = 1.0
-
-
-    def force_move(self, y, x, player):
-        '''Force a move. Sets the black slot given [y, x, player - 1] to 1.0'''
-        self.black[y, x, player - 1] = 1.0
-        self.white[y, x, player - 2] = 1.0
-
 
 def residual_block(x):
     '''Build the residual block described in the paper.'''
@@ -97,6 +58,7 @@ def build_model(input_shape=(8,8,2)):
 
 if __name__ == '__main__':
     model = tf.keras.models.load_model(LOC)
+    model.summary()
     input_vector = np.ones((3,8,8,2,), dtype='float32')
     output = model.predict(input_vector)
     print(output[1])
