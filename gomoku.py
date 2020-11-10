@@ -154,6 +154,8 @@ def search_max(board):
         for j in range(8):
             if (board[i][j] == ' '):
                 board[i][j] = 'b'
+                if iswin(board) == 1:
+                    return i, j
                 s = score(board)
                 if (s > max_score):
                     move_y, move_x = i, j
