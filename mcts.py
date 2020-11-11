@@ -287,7 +287,7 @@ if __name__ == '__main__':
     model = tf.keras.models.load_model(LOC)
 
     s, pie, z = self_play(model, games=32, search_iter=32)
-    print('hello')
+    
 
     # boards = np.zeros((128,8,8,2,), dtype="float32")
     # players = [1]*128
