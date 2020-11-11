@@ -31,14 +31,14 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
     defined in ESC180H1F
     '''
     # Check (y_end + d_y, x_end + d_x) is empty 
-    # or (y_end - length++ * d_y, x_end - length++ * d_x) is empty
-    y1, x1, y2, x2 = y_end + d_y, x_end + d_x, y_end - (length + 1) * d_y, x_end - (length + 1) * d_x
+    # or (y_end - length * d_y, x_end - length * d_x) is empty
+    y1, x1, y2, x2 = y_end + d_y, x_end + d_x, y_end - length * d_y, x_end - length * d_x
     length = len(board)
     state = 1
 
     # If one end exceeds the border, no stones can be placed, or if the square is occupied
     # The or short circuits, thus, no index error should be thrown
-    if (y1 < 0 or  x1 < 0 or y1 >= length or x1 >= length or board[y1][x1] != ' '):
+    if (y1 < 0 or x1 < 0 or y1 >= length or x1 >= length or board[y1][x1] != ' '):
         state -= 1
     if (y2 < 0 or x2 < 0 or y2 >= length or x2 >= length or board[y2][x2] != ' '):
         state -= 1
@@ -517,4 +517,4 @@ def some_tests():
 
 
 if __name__ == '__main__':
-    print(play_gomoku(8))
+    test_is_bounded()
