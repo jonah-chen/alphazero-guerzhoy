@@ -170,11 +170,9 @@ def optimized_search(model, boards, players, it=1024, roots=None):
     start = perf_counter()
     # Performs the search
     for _ in range(it):
-        if _ % 128 == 127:
+        if _ % 32 == 31:
             end = perf_counter()
-            print(f'iteration:{_+1} time:{(end-start):.2f}s')
-            game_number = np.random.randint(0, 128)
-            print(f'Game {game_number}:\n{roots[game_number]}')
+            print(f'iteration:{_+1} of {it} time:{(end-start):.2f}s')
             start = perf_counter()
             
         search_boards = deepcopy(boards)
@@ -222,7 +220,7 @@ def optimized_search(model, boards, players, it=1024, roots=None):
     return roots
 
 
-def self_play(model, games=128, game_iter=64, search_iter=1024):
+def self_play(model, games=256, game_iter=64, search_iter=1024):
     boards = np.zeros((games,8,8,2,), dtype="float32")
     players = [1]*games
     inputs = None
@@ -239,6 +237,7 @@ def self_play(model, games=128, game_iter=64, search_iter=1024):
     
 
     for turns in range(game_iter):
+        print(f"------------------------------------------------------------\nTurn {turns+1} of {game_iter}")
         if len(game_boards) == 0:
             return s, pie, z
         results = optimized_search(model, boards, players, roots=inputs, it=search_iter)
@@ -258,7 +257,6 @@ def self_play(model, games=128, game_iter=64, search_iter=1024):
             # Draw
             state = is_win(boards[i])
             if state:
-                print("a game has ended")
                 s.append(game_boards.pop(i))
                 pie.append(mcts_policies.pop(i))
                 if state == 1:
@@ -268,7 +266,7 @@ def self_play(model, games=128, game_iter=64, search_iter=1024):
                 elif state == 3:
                     z.append([0]*(turns+1))
                 boards = np.delete(boards, i, axis=0)
-                players.pop(i)
+                players.pop()
                 
                 games_ended += 1
 
@@ -279,6 +277,12 @@ def self_play(model, games=128, game_iter=64, search_iter=1024):
 
     return s, pie, z
 
+def digest(list_of_list):
+    temp = []
+    for x1 in list_of_list:
+        for x2 in x1:
+            temp.append(x2)
+    return np.array(temp)
 
 
 
@@ -286,8 +290,23 @@ def self_play(model, games=128, game_iter=64, search_iter=1024):
 if __name__ == '__main__':
     model = tf.keras.models.load_model(LOC)
 
-    s, pie, z = self_play(model, games=32, search_iter=32)
+    s, pie, z = self_play(model)
     
+    start = perf_counter()
+    with ProcessPoolExecutor() as executor:
+        pie_f = executor.submit(digest, pie)
+        z_f = executor.submit(digest, z)
+        s_f = executor.submit(digest, s)
+
+        pie = pie_f.result()
+        z = z_f.result()
+        s = s_f.result()
+    end = perf_counter()
+    print(end-start)
+    
+    np.save('selfplay_data/0000/pie', pie)
+    np.save('selfplay_data/0000/z', z)
+    np.save('selfplay_data/0000/s', s)
 
     # boards = np.zeros((128,8,8,2,), dtype="float32")
     # players = [1]*128
