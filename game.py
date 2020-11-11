@@ -34,12 +34,29 @@ def check_legal_moves(board):
 def move_on_board(board, move, player=1, takeback=0):
     """Make a move for player player, or for yourself if no player argument is given.
      Dangerous function may cause illegal board states"""
-    board[move // 8, move % 8, player - 1] = 1.0 - takeback
+    board[move // 8, move % 8, player - 1] = 0.0 if takeback else 1.0 
 
+def print_board(board):
+    s = "  0"
+    for i in range(1,8):
+        s += f"|{i}"
+    
+    for i in range(8):
+        s += f"\n{i}|" 
+        for j in range(8):
+            if board[i,j,0]:
+                s += u"\u03b4"
+            elif board[i,j,1]:
+                s += u"\u03b5"
+            else:
+                s += " "
+            if j != 7:
+                s += "|"
+    print(s)
 
 
 class Game:
-    def __init__(self, black=np.zeros((8, 8, 2,), dtype=np.float32), white=np.zeros((8, 8, 2,), dtype=np.float32)):
+    def __init__(self, black=np.zeros((8,8,2,), dtype=np.float32), white=np.zeros((8,8,2,), dtype=np.float32)):
         '''Creates a more optimized Gomoku game to train the A.I.'''
 
         # The stones will be stored in a way to feed into the neural network
@@ -92,3 +109,9 @@ class Game:
                 if j != 7:
                     s += "|"
         return s
+
+if __name__ == "__main__":
+    board = np.zeros((8,8,2,))
+    move_on_board(board, 3, player=1)
+    move_on_board(board, 11, player=2)
+    print_board(board)
