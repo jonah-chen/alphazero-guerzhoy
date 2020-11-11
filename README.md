@@ -1,4 +1,4 @@
-# better-gomoku
+# alphazero-guerzhoy
 
 IN PROGRESS
 
@@ -8,9 +8,9 @@ Completed:
 Game  
 Optimize game  
 Write neural network  
+Write Monte-Carlo Tree Search(MCTS) Algorithm  
 
 TODO:  
-Write Monte-Carlo Tree Search(MCTS) Algorithm  
 Debug  
 Train network  
 Win!
