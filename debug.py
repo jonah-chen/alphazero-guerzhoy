@@ -22,6 +22,7 @@ def convert_good_to_bad_board(good_board):
             elif bad_board[i][j] == -1:
                 bad_board[i][j] = 'w'
     return bad_board
+    
 
 if __name__=='__main__':
     gm.init()
