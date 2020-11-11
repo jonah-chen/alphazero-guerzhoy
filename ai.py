@@ -4,7 +4,7 @@ from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, Conv2D, Dense, BatchNormalization, Flatten, ReLU, Add
 
-from nptrain import is_win
+from game import Game
 
 LOC = "saved_models"
 
@@ -39,7 +39,7 @@ def build_model(input_shape=(8,8,2)):
     policy = BatchNormalization()(policy)
     policy = ReLU()(policy)
     policy = Flatten()(policy)
-    policy = Dense(64, activation='linear')(policy)
+    policy = Dense(64, activation='softmax')(policy)
 
     # Create value head
     value = Conv2D(1, (1, 1), strides=1)(t)
@@ -57,9 +57,23 @@ def build_model(input_shape=(8,8,2)):
 
 
 if __name__ == '__main__':
-    model = tf.keras.models.load_model(LOC)
+    model = build_model()
     model.summary()
-    input_vector = np.ones((3,8,8,2,), dtype='float32')
-    output = model.predict(input_vector)
-    print(output[1])
-    print(output[0])
+    model.save(LOC)
+    
+    # import time
+
+    # G = Game()
+    # i = 0
+    # while G.is_win() == 0:
+    #     y = int(input("input y\n"))
+    #     x = int(input("input x\n"))
+    #     if(G.move(y, x, i % 2 + 1) == 1):
+    #         print("Illegal move")
+    #     else:
+    #         i += 1
+    #         start = time.perf_counter()
+    #         output = model.predict(np.array([G.black for _ in range(1024)]))
+    #         end = time.perf_counter()
+    #         print(G)
+    #         print(f"Time Taken: {1000*(end-start):.1f}ms\n")
