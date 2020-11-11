@@ -237,7 +237,7 @@ def self_play(model, games=256, game_iter=64, search_iter=1024):
     
 
     for turns in range(game_iter):
-        print(f"------------------------------------------------------------\nTurn {turns+1} of {game_iter}")
+        print(f"------------------------------------------------------------\nTurn {turns+1} of {game_iter}. Cumulated: {int(perf_counter() - true_start)}s")
         if len(game_boards) == 0:
             return s, pie, z
         results = optimized_search(model, boards, players, roots=inputs, it=search_iter)
@@ -288,6 +288,7 @@ def digest(list_of_list):
 
 
 if __name__ == '__main__':
+    true_start = perf_counter()
     model = tf.keras.models.load_model(LOC)
 
     s, pie, z = self_play(model)
