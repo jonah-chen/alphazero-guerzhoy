@@ -1,6 +1,7 @@
 #include <Python.h>
 #include <numpy/ndarrayobject.h>
 #include <numpy/ndarraytypes.h>
+#include <math.h>
 #define SIZE 8
 
 static PyObject* 
@@ -165,11 +166,36 @@ move_from_policy1D(PyObject *self, PyObject *args)
     return Py_BuildValue("ii", 0, 0);
 }
 
+static PyObject *
+Q_plus_U(PyObject *self, PyObject *args)
+{
+    int N, N_b; // N is N(s,a), N_b is N(s,b)
+    double P, c_puct, W; // P is P(s,a), c_puct is a constant determining the level of exploration, W is W(s,a).
+    if (!PyArg_ParseTuple(args, "ddiid", &c_puct, &W, &N, &N_b, &P)) // args: c_puct, W, N, N_b, P
+        return NULL;
+    if (N==0)
+        return Py_BuildValue("d", c_puct*P*sqrt((double)N_b));
+    return Py_BuildValue("d", (double)W/(double)N + c_puct*P*sqrt((double)N_b)/(1.0+(double)N));
+}
+
+static PyObject *
+minusQ_plus_U(PyObject *self, PyObject *args)
+{
+    int N, N_b; // N is N(s,a), N_b is N(s,b)
+    double P, c_puct, W; // P is P(s,a), c_puct is a constant determining the level of exploration, W is W(s,a).
+    if (!PyArg_ParseTuple(args, "ddiid", &c_puct, &W, &N, &N_b, &P)) // args: c_puct, W, N, N_b, P
+        return NULL;
+    if (N==0)
+        return Py_BuildValue("d", c_puct*P*sqrt((double)N_b));
+    return Py_BuildValue("d", c_puct*P*sqrt((double)N_b)/(1.0+(double)N)-(double)W/(double)N);
+}
 
 static PyMethodDef myMethods[] = {
     {"is_win", is_win, METH_VARARGS, "Input numpy array with shape=(SIZE,SIZE,2,) and return the index corresponding to the game state in this array [\"Continue Playing\", \"Black won\", \"White won\", \"Draw\"]"},
     {"move_from_policy2D", move_from_policy2D, METH_VARARGS, "Input numpy array shape=(SIZE,SIZE,) of the policy: The probabilities of making the move at (y,x) that MUST sum up to 1.0 and a random value between zero and one. Return a random (y,x) with that probability distribution."},
     {"move_from_policy1D", move_from_policy1D, METH_VARARGS, "Input numpy array shape=(SIZE*SIZE,) of the policy: The probabilities of making the move at (y,x) that MUST sum up to 1.0 and a random value between zero and one. Return a random (y=i/SIZE,x=i%SIZE) with that probability distribution."},
+    {"Q_plus_U", Q_plus_U, METH_VARARGS, "Input c_puct, W(s,a), N(s,a), sum_[N(s,b)], P(s,a) and return Q+U"},
+    {"minusQ_plus_U", minusQ_plus_U, METH_VARARGS, "Input c_puct, W(s,a), N(s,a), sum_[N(s,b)], P(s,a) and return -Q+U(or Q+U from the opponent's POV)"},
     {NULL, NULL, 0, NULL}
 };
 

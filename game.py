@@ -1,6 +1,42 @@
 import numpy as np
 from nptrain import is_win
 
+# Depricate this for the following representation
+#
+# Board represented with numpy array shape (8,8,2,)
+# np.flip(board, axis=2) will flip the perspective of the board for the other player
+# 
+# The symmetries of the board are:
+# board
+# np.rot90(board, 1, (0,1,))
+# np.rot90(board, 2, (0,1,)) 
+# np.rot90(board, 3, (0,1,))
+#
+# The four above action followed by np.flip(board, axis=0)
+
+
+def check_legal_actions(board):
+    """Return the legal actions like that returned by the policy head in shape (64,)
+    """
+    return board[:,:,0]==board[:,:,1].reshape(64,)
+
+def get_prob(board, policy_val):
+    """Return the probabilities of selecting the children of a node given the policy 
+    and removing illegal moves"""
+    x = (board[:,:,0] == board[:,:,1]).reshape(64,) * policy_val
+    return x / np.sum(x)
+
+def check_legal_moves(board):
+    """Return the legal moves on the board.
+    """
+    return board[:,:,0]==board[:,:,1]
+
+def move_on_board(board, move, player=1, takeback=0):
+    """Make a move for player player, or for yourself if no player argument is given.
+     Dangerous function may cause illegal board states"""
+    board[move // 8, move % 8, player - 1] = 1.0 - takeback
+
+
 
 class Game:
     def __init__(self, black=np.zeros((8, 8, 2,), dtype=np.float32), white=np.zeros((8, 8, 2,), dtype=np.float32)):
@@ -27,7 +63,7 @@ class Game:
 
     def move(self, y, x, player):
         '''Play a move for the player player and returns 1 if the move fails.'''
-        if(player != 1 and player != 2) or self.black[y, x, 0] or self.black[y, x, 1]:
+        if (player != 1 and player != 2) or self.black[y, x, 0] or self.black[y, x, 1]:
             return 1
         self.black[y, x, player - 1] = 1.0
         self.white[y, x, player - 2] = 1.0
@@ -37,6 +73,7 @@ class Game:
         '''Force a move. Sets the black slot given [y, x, player - 1] to 1.0'''
         self.black[y, x, player - 1] = 1.0
         self.white[y, x, player - 2] = 1.0
+
     
     def __str__(self):
         s = "  0"
@@ -47,9 +84,11 @@ class Game:
             s += f"\n{i}|" 
             for j in range(8):
                 if self.black[i,j,0]:
-                    s += "b "
+                    s += "b"
                 elif self.white[i,j,0]:
-                    s += "w "
+                    s += "w"
                 else:
-                    s += "  "
+                    s += " "
+                if j != 7:
+                    s += "|"
         return s
