@@ -64,11 +64,14 @@ def compile_new_model(loc, lr=1e-2, model=None):
     If no model is given, a new model will be created. 
     The model is saved to the location loc.
     """
+    test_vector = np.random.randint(0,2,size=(3,8,8,2,))
     if model is None:
         model = build_model()
+    print(model.predict(test_vector))
     model.compile(loss=[categorical_crossentropy, mean_squared_error], optimizer=SGD(lr=lr, momentum=0.9), metrics=['accuracy', 'mean_absolute_percentage_error'])
-    model.save(loc)
     model.summary()
+    print(model.predict(test_vector))
+    model.save(loc)
 
 def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs=50, batch_size=32):
     """Loads the training data to train the model and trains it with the given parameters."""
