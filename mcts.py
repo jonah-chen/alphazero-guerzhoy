@@ -52,13 +52,15 @@ class Node:
         return action, child
 
 
-    def play(self):
+    def play(self, tau=TAU):
+        """Select a move to play based on the result of the MCTS and the temperature parameter tau.
+        """
         N = np.array([child.N for child in self.children.values()])
         a = [action for action in self.children.keys()]
         
-        p = N ** (1 / TAU)
+        p = N ** (1 / tau)
         p = p / np.sum(p)
-        if TAU == 0:
+        if tau == 0:
             action = a[np.argmax(N)]
         else:
             action = np.random.choice(a, p=p)
@@ -82,8 +84,8 @@ class Node:
 
                                                                                                                                                             
 def search_instance(model, board, player, it=1024):
-    """Takes the board from player 1 perspective and performs an instance of MCTS"""
-    
+    """Takes the board from player 1 perspective and performs an instance of MCTS.
+    """
     start = perf_counter() #
     root = Node(0, player)
     # MUST be batched for training
@@ -153,7 +155,8 @@ def search_instance(model, board, player, it=1024):
 
 def optimized_search(model, boards, players, it=1024, roots=None):
     """Perform Monte-Carlo Tree Search on a batch of boards with it iterations. 
-    Return a list of Node objects, whose children is selected with with a given probability distribution for the next move."""
+    Return a list of Node objects, whose children is selected with with a given probability distribution for the next move.
+    """
     games = len(boards)
 
     # Store all the root nodes that need to be evaluated
@@ -220,7 +223,7 @@ def optimized_search(model, boards, players, it=1024, roots=None):
     return roots
 
 
-def self_play(model, games=256, game_iter=64, search_iter=1024):
+def self_play(model, games=64, game_iter=64, search_iter=1024):
     boards = np.zeros((games,8,8,2,), dtype="float32")
     players = [1]*games
     inputs = None
@@ -254,7 +257,7 @@ def self_play(model, games=256, game_iter=64, search_iter=1024):
             # Make Move
             move_on_board(boards[i], act, player=players[i])
             
-            # Draw
+            # When game ends, save the data of the game.
             state = is_win(boards[i])
             if state:
                 s.append(game_boards.pop(i))
@@ -269,9 +272,8 @@ def self_play(model, games=256, game_iter=64, search_iter=1024):
                 players.pop()
                 
                 games_ended += 1
-
-
             else:
+                # When game doesn't end. Player changes and the new state is appended to be evaluated on the next tern.
                 inputs.append(results[i].children[act])
                 players[i] = players[i] % 2 + 1
 
@@ -291,7 +293,7 @@ if __name__ == '__main__':
     true_start = perf_counter()
     model = tf.keras.models.load_model(LOC)
 
-    s, pie, z = self_play(model)
+    s, pie, z = self_play(model, games=64)
     
     start = perf_counter()
     with ProcessPoolExecutor() as executor:

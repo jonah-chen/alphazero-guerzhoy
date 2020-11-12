@@ -3,6 +3,7 @@
 import numpy as np
 # from gomoku import print_board
 import trainGomoku as gm
+from game import print_board
 
 def random_board(shape, bad=False):
     board = np.random.randint(-1,2,size=shape)
@@ -25,22 +26,29 @@ def convert_good_to_bad_board(good_board):
     
 
 if __name__=='__main__':
-    gm.init()
-    gm.print_board()
-    turns = 0
-    while(gm.is_win() == 0):
-        y = int(input("\nyval"))
-        x = int(input("\nxval"))
-        if turns % 2 == 0:
-            if gm.move(y,x,1) == 0:
-                turns += 1
-                gm.print_board()
-        else:
-            if gm.move(y,x,2) == 0:
-                turns += 1
-                gm.print_board()
+    # gm.init()
+    # gm.print_board()
+    # turns = 0
+    # while(gm.is_win() == 0):
+    #     y = int(input("\nyval"))
+    #     x = int(input("\nxval"))
+    #     if turns % 2 == 0:
+    #         if gm.move(y,x,1) == 0:
+    #             turns += 1
+    #             gm.print_board()
+    #     else:
+    #         if gm.move(y,x,2) == 0:
+    #             turns += 1
+    #             gm.print_board()
+    pie = np.load('selfplay_data/0000/pie.npy')
+    z = np.load('selfplay_data/0000/z.npy')
+    s = np.load('selfplay_data/0000/s.npy')
 
-
+    print(f'{pie.shape} {z.shape} {s.shape}')
+    
+    for i in range(100):
+        print(pie[i])
+        print_board(s[i])
 
     
 
