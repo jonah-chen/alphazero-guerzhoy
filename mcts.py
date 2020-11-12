@@ -198,7 +198,31 @@ def optimized_search(model, boards, players, it=1024, roots=None):
                 search_boards[i] = np.flip(search_boards[i], axis=2)
         
         # Evaulate: Determine the policies and values as well and the end state of the leaf nodes.
-        policies, values = model.predict(search_boards)
+
+        # Performs at random one of eight symmetries of the board.
+        rotation = random.randint(0,3)
+        reflection = random.randint(0,1)
+
+        # Calculate the policies and values using the NN and reverses the transformation.
+
+        if rotation:
+            if reflection:
+                policies, values = model.predict(
+                    np.rot90(np.flip(search_boards, axis=2), 
+                    rotation, (1,2)))
+                policies = np.flip(
+                    np.rot90(policies.reshape(-1,8,8,), 
+                    rotation, (2,1)), axis=2).reshape(-1,64,)
+            else:
+                policies, values = model.predict(np.rot90(search_boards, rotation, (1,2)))
+                policies = np.rot90(policies.reshape(-1,8,8,), rotation, (2,1)).reshape(-1,64,)
+        elif reflection:
+            policies, values = model.predict(np.flip(search_boards, axis=2))
+            policies = np.flip(policies.reshape(-1,8,8,), axis=2).reshape(-1,64,)
+        else:
+            policies, values = model.predict(search_boards)
+        
+
         values = values.flatten()
         states = [is_win(search_board) for search_board in search_boards]
 
@@ -293,7 +317,7 @@ if __name__ == '__main__':
     true_start = perf_counter()
     model = tf.keras.models.load_model(LOC)
 
-    s, pie, z = self_play(model, games=64)
+    s, pie, z = self_play(model, games=96)
     
     start = perf_counter()
     with ProcessPoolExecutor() as executor:
