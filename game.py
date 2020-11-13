@@ -1,4 +1,5 @@
 import numpy as np
+
 from nptrain import is_win
 
 # Depricate this for the following representation
@@ -14,11 +15,11 @@ from nptrain import is_win
 #
 # The four above action followed by np.flip(board, axis=0)
 
-
 def check_legal_actions(board):
     """Return the legal actions like that returned by the policy head in shape (64,)
     """
     return board[:,:,0]==board[:,:,1].reshape(64,)
+
 
 def get_prob(board, policy_val):
     """Return the probabilities of selecting the children of a node given the policy 
@@ -26,15 +27,18 @@ def get_prob(board, policy_val):
     x = (board[:,:,0] == board[:,:,1]).reshape(64,) * policy_val
     return x / np.sum(x)
 
+
 def check_legal_moves(board):
     """Return the legal moves on the board.
     """
     return board[:,:,0]==board[:,:,1]
 
+
 def move_on_board(board, move, player=1, takeback=0):
     """Make a move for player player, or for yourself if no player argument is given.
      Dangerous function may cause illegal board states"""
     board[move // 8, move % 8, player - 1] = 0.0 if takeback else 1.0 
+
 
 def print_board(board):
     s = "  0"
@@ -109,6 +113,7 @@ class Game:
                 if j != 7:
                     s += "|"
         return s
+
 
 if __name__ == "__main__":
     board = np.zeros((8,8,2,))

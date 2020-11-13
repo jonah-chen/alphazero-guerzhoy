@@ -1,6 +1,8 @@
+from concurrent.futures import ProcessPoolExecutor
+
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.callbacks import TensorBoard, LearningRateScheduler
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, Conv2D, Dense, BatchNormalization, Flatten, ReLU, Add
 from tensorflow.keras.losses import mean_squared_error, categorical_crossentropy 
@@ -9,8 +11,8 @@ from tensorflow.keras.optimizers import SGD
 
 from game import Game
 
-LOC = "saved_models"
 L2_VAL = 1e-4
+
 def residual_block(x):
     """Build the residual block described in the paper.
     """
@@ -59,6 +61,7 @@ def build_model(input_shape=(8,8,2)):
 
     return model
 
+
 def compile_new_model(loc, lr=1e-2, model=None):
     """Compiles a model with the proper parameters. 
     If no model is given, a new model will be created. 
@@ -73,12 +76,18 @@ def compile_new_model(loc, lr=1e-2, model=None):
     print(model.predict(test_vector))
     model.save(loc)
 
+
 def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs=30, batch_size=32):
     """Loads the training data to train the model and trains it with the given parameters."""
     if num is not None:
         pie = np.load(f'selfplay_data/{num}/pie.npy')
         z = np.load(f'selfplay_data/{num}/z.npy')
         s = np.load(f'selfplay_data/{num}/s.npy')
+        with ProcessPoolExecutor() as executor:
+            for i in range(max(0, num-20), num):
+                pie = executor.submit(np.append, pie, np.load(f'selfplay_data/{i}/pie.npy'), 0).result()
+                z = executor.submit(np.append, z, np.load(f'selfplay_data/{i}/z.npy'), 0).result()
+                s = executor.submit(np.append, s, np.load(f'selfplay_data/{i}/s.npy'), 0).result()
     elif s is None or pie is None or z is None:
         raise NotImplementedError(message="Did not recieve training data")
 
@@ -88,17 +97,13 @@ def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs
         tensorboard = TensorBoard(log_dir=f'LOGS/{log_name}')
         model.fit(x=s, y=[pie, z], batch_size=batch_size, epochs=epochs, shuffle=True, use_multiprocessing=True, callbacks=[tensorboard])
 
-def test_model(num):
+
+def test_model(model, num):
     pie = np.load(f'selfplay_data/{num}/pie.npy')
     z = np.load(f'selfplay_data/{num}/z.npy')
     s = np.load(f'selfplay_data/{num}/s.npy')
     model.evaluate(x=s, y=[pie,z], batch_size=32, use_multiprocessing=True)
 
+
 if __name__ == '__main__':
-    model = tf.keras.models.load_model(LOC)
-    # train_model(model, num='0003', log_name='0003')
-    # model.save(LOC)
-    test_model('0000')
-    test_model('0001')
-    test_model('0002')
-    
+    compile_new_model("models/0")
