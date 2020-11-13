@@ -94,7 +94,7 @@ def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs
     if log_name is None:
         model.fit(x=s, y=[pie, z], batch_size=batch_size, epochs=epochs, shuffle=True, use_multiprocessing=True)
     else:
-        tensorboard = TensorBoard(log_dir=f'LOGS/{log_name}')
+        tensorboard = TensorBoard(log_dir=f'LOGS/{log_name}', histogram_freq=1, write_grads=True, write_images=True)
         model.fit(x=s, y=[pie, z], batch_size=batch_size, epochs=epochs, shuffle=True, use_multiprocessing=True, callbacks=[tensorboard])
 
 
@@ -106,4 +106,6 @@ def test_model(model, num):
 
 
 if __name__ == '__main__':
-    compile_new_model("models/0")
+    model = tf.keras.models.load_model('models/0')
+    model.predict(np.ones((1,8,8,2)))
+    train_model(model, num=1, log_name=1)

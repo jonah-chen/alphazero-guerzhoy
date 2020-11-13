@@ -59,6 +59,22 @@ def print_board(board):
     print(s)
 
 
+def print_game(game, colors=True):
+    """Prints a easily readable form of the game provided as an array of moves starting from black playing the first move
+    """
+    print("   00|01|02|03|04|05|06|07")
+    arr = np.zeros((8,8,))
+    for i in range(len(game)):
+        arr[game[i]//8, game[i]%8] = i
+    for i in range(8):
+        s = "0{i}"
+        for j in range(8):
+            if arr[i,j] == 0:
+                pass
+
+
+
+
 class Game:
     def __init__(self, black=np.zeros((8,8,2,), dtype=np.float32), white=np.zeros((8,8,2,), dtype=np.float32)):
         '''Creates a more optimized Gomoku game to train the A.I.'''

@@ -83,7 +83,7 @@ class Node:
         self.expanded = True
 
 
-def search_instance(model, board, player, it=1024):
+def search_instance(model, board, player, it=512):
     """Takes the board from player 1 perspective and performs an instance of MCTS.
     """
     start = perf_counter() #
@@ -153,7 +153,7 @@ def search_instance(model, board, player, it=1024):
     return root
 
 
-def optimized_search(model, boards, players, it=1024, roots=None):
+def optimized_search(model, boards, players, it=512, roots=None):
     """Perform Monte-Carlo Tree Search on a batch of boards with it iterations. 
     Return a list of Node objects, whose children is selected with with a given probability distribution for the next move.
     """

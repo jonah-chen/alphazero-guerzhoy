@@ -10,7 +10,7 @@ from game import move_on_board
 from nptrain import *
 
 
-def self_play(model, games=96, game_iter=64, search_iter=1024):
+def self_play(model, games=128, game_iter=64, search_iter=512):
     boards = np.zeros((games,8,8,2,), dtype="float32")
     players = [1]*games
     inputs = None
@@ -75,7 +75,7 @@ def digest(list_of_list):
     return np.array(temp)
 
 
-def ai_v_ai(black, white, games=48, game_iter=64, search_iter=1024, tau=0):
+def ai_v_ai(black, white, games=64, game_iter=64, search_iter=512, tau=0):
     """Plays the AI black against white. Return the score of black (between 0 and 100, higher is better), the list of list of games played as moves (0-63) in the order they are played, and the record as a tuple (losses, draws, wins). Black will start with the black stones in every game"""
     
     # Creates the boards.
@@ -97,7 +97,7 @@ def ai_v_ai(black, white, games=48, game_iter=64, search_iter=1024, tau=0):
             return round((100*wins+50*draws)/games), save_games, [losses, draws, wins]
 
         # Execute the MCTS
-        results = optimized_search(black if turns % 2 else white, boards, players, roots=inputs, it=search_iter)
+        results = optimized_search(white if turns % 2 else black, boards, players, roots=inputs, it=search_iter)
 
         inputs = []
         games_ended = 0
@@ -132,7 +132,7 @@ def ai_v_ai(black, white, games=48, game_iter=64, search_iter=1024, tau=0):
     return round((100*wins+50*draws)/games), save_games, [losses, draws, wins]
 
 
-def generate_data(num, model, games=96):
+def generate_data(num, model, games=128):
     global true_start
     true_start = perf_counter()
 
@@ -159,7 +159,7 @@ def generate_data(num, model, games=96):
     np.save(f'selfplay_data/{num}/s', s)
 
 
-def eval_model(new_model, old_model, games=96):
+def eval_model(new_model, old_model, games=128):
     """Play games games with equal chance each model gets white and black and return 
     the score the new_model achieved(0-100), 
     the record [losses, draws, wins], 
@@ -172,8 +172,8 @@ def eval_model(new_model, old_model, games=96):
 
 
 if __name__ == '__main__':
-    omodel = tf.keras.models.load_model('saved_models', compile=False)
-    nmodel = tf.keras.models.load_model('models/0', compile=False)
+    omodel = tf.keras.models.load_model('saved_models')
+    nmodel = tf.keras.models.load_model('models/0')
     score, record, black_games, white_games = eval_model(omodel, nmodel)
 
     print(score)
