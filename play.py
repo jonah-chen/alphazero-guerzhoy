@@ -1,6 +1,7 @@
 from time import perf_counter
 from copy import deepcopy
 from concurrent.futures import ProcessPoolExecutor
+from os import mkdir
 
 import numpy as np
 import tensorflow as tf
@@ -113,7 +114,7 @@ def ai_v_ai(black, white, games=64, game_iter=64, search_iter=512, tau=0):
             # When game ends, save the data of the game.
             state = is_win(boards[i])
             if state:
-                save_games.append(temp_games.pop(i))
+                save_games.append(np.array(temp_games.pop(i)))
                 if state == 1:
                     wins += 1
                 elif state == 2:
@@ -129,16 +130,17 @@ def ai_v_ai(black, white, games=64, game_iter=64, search_iter=512, tau=0):
                 inputs.append(results[i].children[act])
                 players[i] = players[i] % 2 + 1
         
-    return round((100*wins+50*draws)/games), save_games, [losses, draws, wins]
+    return round((100*wins+50*draws)/games), np.array(save_games), [losses, draws, wins]
 
 
 def generate_data(num, model, games=128):
     global true_start
     true_start = perf_counter()
 
-    # Check if a directory exists
+    # Make a directory and write a dummy file to it.
+    mkdir(f'selfplay_data/{num}')
     np.save(f'selfplay_data/{num}/_test', np.zeros(1,))
-    print("The given directory is valid.")
+    print("Directly created succesfully.")
 
     s, pie, z = self_play(model, games=games)
     
