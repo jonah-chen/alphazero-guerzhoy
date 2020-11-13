@@ -73,7 +73,7 @@ def compile_new_model(loc, lr=1e-2, model=None):
     print(model.predict(test_vector))
     model.save(loc)
 
-def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs=50, batch_size=32):
+def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs=30, batch_size=32):
     """Loads the training data to train the model and trains it with the given parameters."""
     if num is not None:
         pie = np.load(f'selfplay_data/{num}/pie.npy')
@@ -88,6 +88,17 @@ def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs
         tensorboard = TensorBoard(log_dir=f'LOGS/{log_name}')
         model.fit(x=s, y=[pie, z], batch_size=batch_size, epochs=epochs, shuffle=True, use_multiprocessing=True, callbacks=[tensorboard])
 
+def test_model(num):
+    pie = np.load(f'selfplay_data/{num}/pie.npy')
+    z = np.load(f'selfplay_data/{num}/z.npy')
+    s = np.load(f'selfplay_data/{num}/s.npy')
+    model.evaluate(x=s, y=[pie,z], batch_size=32, use_multiprocessing=True)
+
 if __name__ == '__main__':
-    compile_new_model(LOC)
+    model = tf.keras.models.load_model(LOC)
+    # train_model(model, num='0003', log_name='0003')
+    # model.save(LOC)
+    test_model('0000')
+    test_model('0001')
+    test_model('0002')
     

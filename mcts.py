@@ -247,7 +247,7 @@ def optimized_search(model, boards, players, it=1024, roots=None):
     return roots
 
 
-def self_play(model, games=64, game_iter=64, search_iter=1024):
+def self_play(model, games=96, game_iter=64, search_iter=1024):
     boards = np.zeros((games,8,8,2,), dtype="float32")
     players = [1]*games
     inputs = None
@@ -310,11 +310,28 @@ def digest(list_of_list):
             temp.append(x2)
     return np.array(temp)
 
+def ai_v_ai(model1, model2, games=96, game_iter=64, search_iter=1024):
+    if games % 2 != 0:
+        raise ValueError("To play AI vs AI, a even number of games must be played.")
+    boards1 = np.zeros((games/2,8,8,2,), dtype="float32")
+    boards2 = np.zeros((games/2,8,8,2,), dtype="float32")
+    players = [1]*games
+    inputs = None
+
+    final_pos = []
+
 
 
 
 if __name__ == '__main__':
+    NUM = '0002'
+
     true_start = perf_counter()
+
+    # Check if a directory exists
+    np.save(f'selfplay_data/{NUM}/_test', np.zeros(1,))
+    print("The given directory is valid.")
+
     model = tf.keras.models.load_model(LOC)
 
     s, pie, z = self_play(model, games=96)
@@ -331,9 +348,9 @@ if __name__ == '__main__':
     end = perf_counter()
     print(end-start)
     
-    np.save('selfplay_data/0000/pie', pie)
-    np.save('selfplay_data/0000/z', z)
-    np.save('selfplay_data/0000/s', s)
+    np.save(f'selfplay_data/{NUM}/pie', pie)
+    np.save(f'selfplay_data/{NUM}/z', z)
+    np.save(f'selfplay_data/{NUM}/s', s)
 
     # boards = np.zeros((128,8,8,2,), dtype="float32")
     # players = [1]*128
