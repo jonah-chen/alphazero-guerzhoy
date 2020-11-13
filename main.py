@@ -6,12 +6,12 @@ from copy import copy
 from tensorflow.keras.models import load_model
 
 
-model = load_model('models/0')
-best_model_num = 0
+model = load_model('models/2')
+best_model_num = 2
 best_model = copy(model)
 
-for num in range(1, 25):
-    generate_data(num, model)
+for num in range(3, 25):
+    generate_data(num, best_model) 
     train_model(model, num=num, log_name=num)
     model.save(f'models/{num}')
     

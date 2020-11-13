@@ -170,7 +170,7 @@ def eval_model(new_model, old_model, games=128):
     as a tuple in order."""
     _, games1, record1 = ai_v_ai(new_model, old_model, games=games//2)
     _, games2, record2 = ai_v_ai(old_model, new_model, games=games//2)
-    return round(((record1[2]+record2[0])*100 + (record1[1]+record2[1])*50)/games), [record1[0]+record2[2] ,record1[1]+record2[1], record1[2]+record2[0]], games1, games2 
+    return round(((record1[2]+record2[0])*100 + (record1[1]+record2[1])*50)/games), [record1[0]+record2[2] ,record1[1]+record2[1], record1[2]+record2[0]], games1, games2
 
 
 if __name__ == '__main__':
