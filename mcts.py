@@ -183,7 +183,7 @@ def optimized_search(model, boards, players, it=512, roots=None):
         search_players = copy(players)
         paths = [[node] for node in nodes] # numpy transpose may or may not be faster
 
-        # For all games, expands the nodes
+        # For all games, play maximizing Q+U until a leaf node is reached.
         for i in range(games):
             while nodes[i].expanded:
                 action, nodes[i] = nodes[i].select()
@@ -249,19 +249,4 @@ def optimized_search(model, boards, players, it=512, roots=None):
 
 
 if __name__ == '__main__':   
-    boards = np.zeros((128,8,8,2,), dtype="float32")
-    players = [1]*128
-
-    results = None
-
-    while 1:
-        results = optimized_search(model, boards, players, roots=results, it=5)
-        for i in range(128):
-            if not is_win(boards[i]):
-                act = results[i].play()
-                results[i] = results[i].children[act]
-                move_on_board(boards[i], act, player=players[i])
-            print(f"Player{i} selected action {act}. The result is {is_win(boards[i])}\n")
-            print_board(boards[i])
-            print("\n")
-            players[i] = players[i] % 2 + 1
+    pass

@@ -77,7 +77,7 @@ def compile_new_model(loc, lr=1e-2, model=None):
     model.save(loc)
 
 
-def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs=30, batch_size=32):
+def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs=20, batch_size=32):
     """Loads the training data to train the model and trains it with the given parameters.
     """
     if num is not None:

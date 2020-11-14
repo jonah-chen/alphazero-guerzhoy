@@ -28,7 +28,7 @@ def self_play(model, games=128, game_iter=64, search_iter=512):
     
 
     for turns in range(game_iter):
-        print(f"------------------------------------------------------------\nTurn {turns+1} of {game_iter}. Cumulated: {int(perf_counter() - true_start)}s")
+        print(f"------------------------------------------------------------\nTurn {turns+1} of {game_iter}. Ended: {games - len(game_boards)} of {games}. Cumulated: {int(perf_counter() - true_start)}s")
         if len(game_boards) == 0:
             return s, pie, z
         results = optimized_search(model, boards, players, roots=inputs, it=search_iter)
@@ -58,7 +58,8 @@ def self_play(model, games=128, game_iter=64, search_iter=512):
                     z.append([0]*(turns+1))
                 boards = np.delete(boards, i, axis=0)
                 players.pop()
-                
+                del results[i]
+
                 games_ended += 1
             else:
                 # When game doesn't end. Player changes and the new state is appended to be evaluated on the next tern.
@@ -123,6 +124,7 @@ def ai_v_ai(black, white, games=64, game_iter=64, search_iter=512, tau=0):
                     draws += 1
                 boards = np.delete(boards, i, axis=0)
                 players.pop()
+                del results[i]
                 
                 games_ended += 1
             else:
@@ -171,8 +173,6 @@ def eval_model(new_model, old_model, games=128):
 
 
 if __name__ == '__main__':
-    omodel = tf.keras.models.load_model('saved_models')
-    nmodel = tf.keras.models.load_model('models/0')
-    score, record, black_games, white_games = eval_model(omodel, nmodel)
-
-    print(score)
+    model2 = tf.keras.models.load_model('models/2')
+    model4 = tf.keras.models.load_model('models/4')
+    eval_model(model4, model2)

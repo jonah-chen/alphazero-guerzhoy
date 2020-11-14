@@ -34,9 +34,12 @@ def check_legal_moves(board):
     return board[:,:,0]==board[:,:,1]
 
 
-def move_on_board(board, move, player=1, takeback=0):
+def move_on_board(board, move, player=1, takeback=False, safe=True):
     """Make a move for player player, or for yourself if no player argument is given.
      Dangerous function may cause illegal board states"""
+    if not takeback and safe:
+        if board[move // 8, move % 8, player - 1] > 0.0:
+            raise ValueError(f"The move {move} is illegal on {print_board(board)}")
     board[move // 8, move % 8, player - 1] = 0.0 if takeback else 1.0 
 
 
@@ -62,17 +65,30 @@ def print_board(board):
 def print_game(game, colors=True):
     """Prints a easily readable form of the game provided as an array of moves starting from black playing the first move
     """
+    print(game)
     print("   00|01|02|03|04|05|06|07")
     arr = np.zeros((8,8,))
     for i in range(len(game)):
-        arr[game[i]//8, game[i]%8] = i
+        arr[game[i]//8, game[i]%8] = i + 1
     for i in range(8):
-        s = "0{i}"
+        s = f"0{i}"
         for j in range(8):
-            if arr[i,j] == 0:
-                pass
-
-
+            if arr[i,j]:
+                s += "|Bk" if arr[i,j]%2 else "|Wh"
+            else:
+                s += f"|  "
+        print(s)
+        s = "  "
+        for j in range(8):
+            s += "|"
+            if arr[i,j]:
+                if arr[i,j] < 10:
+                    s += "0" 
+                s += str(int(arr[i,j]))
+            else:
+                s += f"  "
+        print(s)
+    
 
 
 class Game:
@@ -132,7 +148,6 @@ class Game:
 
 
 if __name__ == "__main__":
-    board = np.zeros((8,8,2,))
-    move_on_board(board, 3, player=1)
-    move_on_board(board, 11, player=2)
-    print_board(board)
+    arr = np.load("games/2v3.npy", allow_pickle=True)
+    print(arr[3])
+    print_game(arr[3])

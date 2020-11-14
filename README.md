@@ -9,8 +9,8 @@ Game
 Optimize game  
 Write neural network  
 Write Monte-Carlo Tree Search(MCTS) Algorithm  
+Debug (This took way too long lmao)  
 
 TODO:  
-Debug  
 Train network  
 Win!
