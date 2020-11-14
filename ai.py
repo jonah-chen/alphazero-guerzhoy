@@ -71,7 +71,7 @@ def compile_new_model(loc, lr=1e-2, model=None):
     if model is None:
         model = build_model()
     print(model.predict(test_vector))
-    model.compile(loss=[categorical_crossentropy, mean_squared_error], optimizer=SGD(lr=lr, momentum=0.9), metrics=['accuracy', 'mean_absolute_percentage_error'])
+    model.compile(loss=[categorical_crossentropy, mean_squared_error], optimizer=SGD(lr=lr, momentum=0.9), metrics=['accuracy'])
     model.summary()
     print(model.predict(test_vector))
     model.save(loc)
@@ -85,7 +85,7 @@ def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs
         z = np.load(f'selfplay_data/{num}/z.npy')
         s = np.load(f'selfplay_data/{num}/s.npy')
         with ProcessPoolExecutor() as executor:
-            for i in range(max(1, num-20), num):
+            for i in range(max(0, num-20), num):
                 pie = executor.submit(np.append, pie, np.load(f'selfplay_data/{i}/pie.npy'), 0).result()
                 z = executor.submit(np.append, z, np.load(f'selfplay_data/{i}/z.npy'), 0).result()
                 s = executor.submit(np.append, s, np.load(f'selfplay_data/{i}/s.npy'), 0).result()

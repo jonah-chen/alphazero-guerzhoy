@@ -142,7 +142,7 @@ def generate_data(num, model, games=128):
     # Make a directory and write a dummy file to it.
     mkdir(f'selfplay_data/{num}')
     np.save(f'selfplay_data/{num}/_test', np.zeros(1,))
-    print("Directly created succesfully.")
+    print("Directory created succesfully.")
 
     s, pie, z = self_play(model, games=games)
     
