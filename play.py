@@ -146,13 +146,9 @@ def generate_data(num, model, games=128):
     
     start = perf_counter()
     with ProcessPoolExecutor() as executor:
-        pie_f = executor.submit(digest, pie)
-        z_f = executor.submit(digest, z)
-        s_f = executor.submit(digest, s)
-
-        pie = pie_f.result()
-        z = z_f.result()
-        s = s_f.result()
+        pie = executor.submit(digest, pie).result()
+        z = executor.submit(digest, z).result()
+        s = executor.submit(digest, s).result()
     end = perf_counter()
     print(end-start)
     
@@ -160,6 +156,7 @@ def generate_data(num, model, games=128):
     np.save(f'selfplay_data/{num}/z', z)
     np.save(f'selfplay_data/{num}/s', s)
 
+    del s, pie, z
 
 def eval_model(new_model, old_model, games=128):
     """Play games games with equal chance each model gets white and black and return 
