@@ -2,7 +2,7 @@ from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.callbacks import TensorBoard, ModelCheckpoint
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, Conv2D, Dense, BatchNormalization, Flatten, ReLU, Add
 from tensorflow.keras.losses import mean_squared_error, categorical_crossentropy 
@@ -95,8 +95,19 @@ def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs
     if log_name is None:
         model.fit(x=s, y=[pie, z], batch_size=batch_size, epochs=epochs, shuffle=True, use_multiprocessing=True)
     else:
+        # Create the callbacks
+        model_checkpoint = ModelCheckpoint('checkpoint', monitor='loss', save_best_only=True)
         tensorboard = TensorBoard(log_dir=f'LOGS/{log_name}', histogram_freq=1, write_grads=True, write_images=True)
-        model.fit(x=s, y=[pie, z], batch_size=batch_size, epochs=epochs, shuffle=True, use_multiprocessing=True, callbacks=[tensorboard])
+
+        model.fit(x=s, y=[pie, z], 
+            batch_size=batch_size, 
+            epochs=epochs, 
+            shuffle=True, 
+            use_multiprocessing=True, 
+            callbacks=[tensorboard, model_checkpoint])
+
+        # Load the weights from the checkpoint
+        model.load_weights('checkpoint')
 
 
 def test_model(model, num):
