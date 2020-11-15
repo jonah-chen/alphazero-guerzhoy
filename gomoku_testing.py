@@ -1,4 +1,4 @@
-from gomoku import print_board, is_empty, detect_rows, search_max, is_win
+from gomoku import print_board, is_empty, detect_rows, search_max, is_win, iswindebugging
 import numpy as np
 import random
 def gen_random_board():
@@ -8,8 +8,6 @@ def gen_random_board():
             temp_1 = [' ', 'b', 'w']
             temp[a][b] = random.choice(temp_1)
     return temp
-
-
 def test_gomoku(n):
     for d in range(n):
         new_board = gen_random_board()
@@ -21,6 +19,7 @@ def test_gomoku(n):
                 print ("detect_rows test with color " + color + " and length " + str(e) +  ": " + str(temp_5))
         print ("search_max test: " + str(search_max(new_board)))
         print ("is_win test: " + is_win(new_board))
+        print("iswin debugging: " + str(iswindebugging(new_board)))
         for f in range(7):
             print(" ")
-test_gomoku(20)              
+test_gomoku(50)  #change this number to the number of boards you want

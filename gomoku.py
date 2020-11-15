@@ -195,8 +195,6 @@ def score(board): # return int
 
 
 def iswin(board):
-    '''Return the index corresponding to the game state in this array
-    ["White won", "Black won", "Draw", "Continue Playing"]'''
     draw = True
     for i in range(len(board)):
         for j in range(len(board)):
@@ -214,7 +212,7 @@ def iswin(board):
             
 
             # vertical case:
-            if i + 4 < len(board):
+            elif i + 4 < len(board):
                 temp_2 = []
                 for c in range(5):
                     temp_2.append(board[i+c][j])
@@ -225,7 +223,7 @@ def iswin(board):
 
             # diagonal cases:
             # first case: increasing the row number and the column number:
-            if i + 4 < len(board) and j + 4 < len(board):
+            elif i + 4 < len(board) and j + 4 < len(board):
                 temp = []
                 for a in range(5):
                     temp.append(board[i+a][j+a])
@@ -234,7 +232,7 @@ def iswin(board):
                 if (temp == ["w"] * 5):
                     return 0
             # second case: increasing the row number but decreasing the column number:
-            if i + 4 < len(board) and j - 4 < len(board):
+            elif i + 4 < len(board) and j - 4 < len(board):
                 temp_3 = []
                 for d in range(5):
                     temp_3.append(board[i+d][j-d])
@@ -246,11 +244,126 @@ def iswin(board):
     if draw:
         return 2
     return 3
+def iswindebugging(board):
+    draw = True
+    for i in range(len(board)):
+        for j in range(len(board)):
+            if draw and board[i][j] == ' ':
+                draw = False
+            # horizontal case:
+            if j + 4 < len(board):
+                temp_1 = []
+                for b in range(5):
+                    temp_1.append(board[i][j+b])
+                if (temp_1 == ["b"] * 5):
+                    return 1, i, j
+                if (temp_1 == ["w"] * 5):
+                    return 0, i, j
+            
+
+            # vertical case:
+            elif i + 4 < len(board):
+                temp_2 = []
+                for c in range(5):
+                    temp_2.append(board[i+c][j])
+                if (temp_2 == ["b"] * 5):
+                    return 1, i, j
+                if (temp_2 == ["w"] * 5):
+                    return 0, i, j
+
+            # diagonal cases:
+            # first case: increasing the row number and the column number:
+            elif i + 4 < len(board) and j + 4 < len(board):
+                temp = []
+                for a in range(5):
+                    temp.append(board[i+a][j+a])
+                if (temp == ["b"] * 5):
+                    return 1, i, j
+                if (temp == ["w"] * 5):
+                    return 0, i, j
+            # second case: increasing the row number but decreasing the column number:
+            elif i + 4 < len(board) and j - 4 < len(board):
+                temp_3 = []
+                for d in range(5):
+                    temp_3.append(board[i+d][j-d])
+                if (temp_3 == ["b"] * 5):
+                    return 1, i, j
+                if (temp_3 == ["w"] * 5):
+                    return 0, i, j
+    
+    if draw:
+        return 2
+    return 3
+
+'''
+def newiswin(board):
+    draw = True
+    for i in range(len(board)):
+        for j in range(len(board)):
+            if draw and board[i][j] == ' ':
+                draw = False
+            if (j + 4 < len(board)):
+                if (board[i][j] == 'b' and
+                    board[i][j + 1] == 'b' and 
+                    board[i][j + 2] == 'b' and
+                    board[i][j + 3] == 'b' and
+                    board[i][j + 4] == 'b'):
+                    return 1
+                if (board[i][j] == 'w' and
+                    board[i][j + 1] == 'w' and 
+                    board[i][j + 2] == 'w' and
+                    board[i][j + 3] == 'w' and
+                    board[i][j + 4] == 'w'):
+                    return 0
+                
+                if (i + 4 < len(board)):
+                    if (board[i][j] == 'b' and
+                        board[i + 1][j + 1] == 'b' and 
+                        board[i + 2][j + 2] == 'b' and
+                        board[i + 3][j + 3] == 'b' and
+                        board[i + 4][j + 4] == 'b'):
+                        return 1
+                    if (board[i][j] == 'w' and
+                        board[i + 1][j + 1] == 'w' and 
+                        board[i + 2][j + 2] == 'w' and
+                        board[i + 3][j + 3] == 'w' and
+                        board[i + 4][j + 4] == 'w'):
+                        return 0
+                if (i - 4 >= 0):
+                    if (board[i][j] == 'b' and
+                        board[i - 1][j + 1] == 'b' and 
+                        board[i - 2][j + 2] == 'b' and
+                        board[i - 3][j + 3] == 'b' and
+                        board[i - 4][j + 4] == 'b'):
+                        return 1
+                    if (board[i][j] == 'w' and
+                        board[i - 1][j + 1] == 'w' and 
+                        board[i - 2][j + 2] == 'w' and
+                        board[i - 3][j + 3] == 'w' and
+                        board[i - 4][j + 4] == 'w'):
+                        return 0
+            if (i + 4 < len(board)):
+                if (board[i][j] == 'b' and
+                board[i + 1][j] == 'b' and
+                board[i + 2][j] == 'b' and
+                board[i + 3][j] == 'b' and
+                board[i + 4][j] == 'b'):
+                    return 1
+                if (board[i][j] == 'w' and
+                board[i + 1][j] == 'w' and
+                board[i + 2][j] == 'w' and
+                board[i + 3][j] == 'w' and
+                board[i + 4][j] == 'w'):
+                    return 0
+    if draw:
+        return 2
+    return 3
+'''
 
 
 def is_win(board):
     states = ["White won", "Black won", "Draw", "Continue Playing"]
-    return states[iswin(board)]
+    return states[iswin(board)]                  
 
 
 def print_board(board): # return void
@@ -281,9 +394,6 @@ def make_empty_board(sz):
 
 
 def analysis(board):
-    # Score
-    ## REMOVE THIS OTHERWISE WE WILL GET ZERO!!!!
-    print(f'Score: {score(board)}')
     for c, full_name in [["b", "Black"], ["w", "White"]]:
         print("%s stones" % (full_name))
         for i in range(2, 6):
@@ -514,7 +624,3 @@ def some_tests():
     #        Semi-open rows of length 4: 0
     #        Open rows of length 5: 0
     #        Semi-open rows of length 5: 0
-
-
-if __name__ == '__main__':
-    test_is_bounded()
