@@ -88,7 +88,7 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
         semi_open_seq_count += 1
 
     # iterate through R
-    for w in range(1, len(R) - length - 1):
+    for w in range(1, len(R) - length):
         if R[w:w + length] == [col] * length: 
             # Check open sequences
             if R[w - 1] == ' ' and R[w + length] == ' ': 
@@ -294,8 +294,6 @@ def iswindebugging(board):
     if draw:
         return 2
     return 3
-
-'''
 def newiswin(board):
     draw = True
     for i in range(len(board)):
@@ -358,12 +356,10 @@ def newiswin(board):
     if draw:
         return 2
     return 3
-'''
-
 
 def is_win(board):
     states = ["White won", "Black won", "Draw", "Continue Playing"]
-    return states[iswin(board)]                  
+    return states[newiswin(board)]                  
 
 
 def print_board(board): # return void
