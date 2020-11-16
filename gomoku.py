@@ -358,7 +358,7 @@ def newiswin(board):
     return 3
 
 def is_win(board):
-    states = ["White won", "Black won", "Draw", "Continue Playing"]
+    states = ["White won", "Black won", "Draw", "Continue playing"]
     return states[newiswin(board)]                  
 
 
