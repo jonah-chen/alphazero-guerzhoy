@@ -306,13 +306,27 @@ def newiswin(board):
                     board[i][j + 2] == 'b' and
                     board[i][j + 3] == 'b' and
                     board[i][j + 4] == 'b'):
-                    return 1
+                    if j + 5 < len(board):
+                        if board[i][j + 5] != 'b':
+                            return 1
+                    elif j - 1 >= 0:
+                        if board[i][j - 1] != 'b':
+                            return 1
+                    else:
+                        return 1
                 if (board[i][j] == 'w' and
                     board[i][j + 1] == 'w' and 
                     board[i][j + 2] == 'w' and
                     board[i][j + 3] == 'w' and
                     board[i][j + 4] == 'w'):
-                    return 0
+                    if j + 5 < len(board):
+                        if board[i][j + 5] != 'w':
+                            return 0 
+                    elif j - 1 >= 0:
+                        if board[i][j - 1] != 'w':
+                            return 0
+                    else:
+                        return 0
                 
                 if (i + 4 < len(board)):
                     if (board[i][j] == 'b' and
@@ -320,39 +334,81 @@ def newiswin(board):
                         board[i + 2][j + 2] == 'b' and
                         board[i + 3][j + 3] == 'b' and
                         board[i + 4][j + 4] == 'b'):
-                        return 1
+                        if i + 5 < len(board) and j + 5 < len(board):
+                            if board[i + 5][j + 5] != 'b':
+                                return 1 
+                        elif i - 1 >= 0 and j - 1 >= 0:
+                            if board[i - 1][j - 1] != 'b':
+                                return 1
+                        else:
+                            return 1
                     if (board[i][j] == 'w' and
                         board[i + 1][j + 1] == 'w' and 
                         board[i + 2][j + 2] == 'w' and
                         board[i + 3][j + 3] == 'w' and
                         board[i + 4][j + 4] == 'w'):
-                        return 0
+                        if i + 5 < len(board) and j + 5 < len(board):
+                            if board[i + 5][j + 5] != 'w':
+                                return 0 
+                        elif i - 1 >= 0 and j - 1 >= 0:
+                            if board[i - 1][j - 1] != 'w':
+                                return 0
+                        else:
+                            return 0
                 if (i - 4 >= 0):
                     if (board[i][j] == 'b' and
                         board[i - 1][j + 1] == 'b' and 
                         board[i - 2][j + 2] == 'b' and
                         board[i - 3][j + 3] == 'b' and
                         board[i - 4][j + 4] == 'b'):
-                        return 1
+                        if i - 5 >= 0 and j + 5 < len(board):
+                            if board[i - 5][j + 5] != 'b':
+                                return 1 
+                        elif i + 1 < len(board) and j - 1 >= 0:
+                            if board[i + 1][j - 1] != 'b':
+                                return 1
+                        else:
+                            return 1
                     if (board[i][j] == 'w' and
                         board[i - 1][j + 1] == 'w' and 
                         board[i - 2][j + 2] == 'w' and
                         board[i - 3][j + 3] == 'w' and
                         board[i - 4][j + 4] == 'w'):
-                        return 0
+                        if i - 5 >= 0 and j + 5 < len(board):
+                            if board[i - 5][j + 5] != 'w':
+                                return 0 
+                        elif i + 1 < len(board) and j - 1 >= 0:
+                            if board[i + 1][j - 1] != 'w':
+                                return 0
+                        else:  
+                            return 0
             if (i + 4 < len(board)):
                 if (board[i][j] == 'b' and
                 board[i + 1][j] == 'b' and
                 board[i + 2][j] == 'b' and
                 board[i + 3][j] == 'b' and
                 board[i + 4][j] == 'b'):
-                    return 1
+                    if i + 5 < len(board):
+                        if board[i + 5][j] != 'b':
+                            return 1 
+                    elif i - 1 >= 0:
+                        if board[i - 1][j] != 'b':
+                            return 1
+                    else:
+                        return 1
                 if (board[i][j] == 'w' and
                 board[i + 1][j] == 'w' and
                 board[i + 2][j] == 'w' and
                 board[i + 3][j] == 'w' and
                 board[i + 4][j] == 'w'):
-                    return 0
+                    if i + 5 < len(board):
+                        if board[i + 5][j] != 'w':
+                            return 0 
+                    elif i - 1 >= 0:
+                        if board[i - 1][j] != 'w':
+                            return 0
+                    else:
+                        return 0
     if draw:
         return 2
     return 3
