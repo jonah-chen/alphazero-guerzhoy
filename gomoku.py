@@ -375,7 +375,7 @@ def newiswin(board):
 
 def is_win(board):
     states = ["White won", "Black won", "Draw", "Continue playing"]
-    return states[newiswin(board)]                  
+    return states[newiswin(board)]                
 
 
 def print_board(board): # return void
