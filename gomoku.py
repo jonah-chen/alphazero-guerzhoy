@@ -306,16 +306,16 @@ def newiswin(board):
                     board[i][j + 2] == 'b' and
                     board[i][j + 3] == 'b' and
                     board[i][j + 4] == 'b' and
-                    j < 1 or board[i][j - 1] != 'b' and
-                    j + 5 >= 8 or board[i][j + 5] != 'b'):
+                    (j < 1 or board[i][j - 1] != 'b') and
+                    (j + 5 >= 8 or board[i][j + 5] != 'b')):
                     return 1
                 if (board[i][j] == 'w' and
                     board[i][j + 1] == 'w' and 
                     board[i][j + 2] == 'w' and
                     board[i][j + 3] == 'w' and
                     board[i][j + 4] == 'w' and
-                    j < 1 or board[i][j - 1] != 'w' and
-                    j + 5 >= 8 or board[i][j + 5] != 'w'):
+                    (j < 1 or board[i][j - 1] != 'w') and
+                    (j + 5 >= 8 or board[i][j + 5] != 'w')):
                     return 0
                 
                 if (i + 4 < len(board)):
@@ -324,16 +324,16 @@ def newiswin(board):
                         board[i + 2][j + 2] == 'b' and
                         board[i + 3][j + 3] == 'b' and
                         board[i + 4][j + 4] == 'b' and 
-                        i < 1 or j < 1 or board[i - 1][j - 1] != 'b' and
-                        i + 5 >= 8 or j + 5 >= 8 or board[i + 5][j + 5] != 'b'):
+                        (i < 1 or j < 1 or board[i - 1][j - 1] != 'b') and
+                        (i + 5 >= 8 or j + 5 >= 8 or board[i + 5][j + 5] != 'b')):
                         return 1
                     if (board[i][j] == 'w' and
                         board[i + 1][j + 1] == 'w' and 
                         board[i + 2][j + 2] == 'w' and
                         board[i + 3][j + 3] == 'w' and
                         board[i + 4][j + 4] == 'w' and 
-                        i < 1 or j < 1 or board[i - 1][j - 1] != 'w' and
-                        i + 5 >= 8 or j + 5 >= 8 or board[i + 5][j + 5] != 'w'):
+                        (i < 1 or j < 1 or board[i - 1][j - 1] != 'w') and
+                        (i + 5 >= 8 or j + 5 >= 8 or board[i + 5][j + 5] != 'w')):
                         return 0
                 if (i - 4 >= 0):
                     if (board[i][j] == 'b' and
@@ -341,8 +341,8 @@ def newiswin(board):
                         board[i - 2][j + 2] == 'b' and
                         board[i - 3][j + 3] == 'b' and
                         board[i - 4][j + 4] == 'b' and
-                        i + 1 >= 8 or j < 1 or board[i + 1][j - 1] != 'b' and
-                        i < 5 or j + 5 >= 8 or board[i - 5][j + 5] != 'b'):
+                        (i + 1 >= 8 or j < 1 or board[i + 1][j - 1] != 'b') and
+                        (i < 5 or j + 5 >= 8 or board[i - 5][j + 5] != 'b')):
                         return 1
                     if (board[i][j] == 'w' and
                         board[i - 1][j + 1] == 'w' and 
@@ -374,7 +374,7 @@ def newiswin(board):
     return 3
 
 def is_win(board):
-    states = ["White won", "Black won", "Draw", "Continue Playing"]
+    states = ["White won", "Black won", "Draw", "Continue playing"]
     return states[newiswin(board)]                  
 
 
@@ -635,6 +635,7 @@ def some_tests():
     #        Open rows of length 4: 0
     #        Semi-open rows of length 4: 0
     #        Open rows of length 5: 0
+<<<<<<< HEAD
     #        Semi-open rows of length 5: 0
 
 
@@ -642,3 +643,6 @@ if __name__ == '__main__':
     board = make_empty_board(8)
     put_seq_on_board(board, 4,0,1,0,3,'b')
     print(detect_rows(board, 'b', 3))
+=======
+    #        Semi-open rows of length 5: 0
+>>>>>>> 2491ccdfb49e40ca18ea8b607061d668abc009b6
