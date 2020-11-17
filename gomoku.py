@@ -88,7 +88,7 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
         semi_open_seq_count += 1
 
     # iterate through R
-    for w in range(1, len(R) - length - 1):
+    for w in range(1, len(R) - length):
         if R[w:w + length] == [col] * length: 
             # Check open sequences
             if R[w - 1] == ' ' and R[w + length] == ' ': 
@@ -294,8 +294,6 @@ def iswindebugging(board):
     if draw:
         return 2
     return 3
-
-'''
 def newiswin(board):
     draw = True
     for i in range(len(board)):
@@ -307,13 +305,17 @@ def newiswin(board):
                     board[i][j + 1] == 'b' and 
                     board[i][j + 2] == 'b' and
                     board[i][j + 3] == 'b' and
-                    board[i][j + 4] == 'b'):
+                    board[i][j + 4] == 'b' and
+                    j < 1 or board[i][j - 1] != 'b' and
+                    j + 5 >= 8 or board[i][j + 5] != 'b'):
                     return 1
                 if (board[i][j] == 'w' and
                     board[i][j + 1] == 'w' and 
                     board[i][j + 2] == 'w' and
                     board[i][j + 3] == 'w' and
-                    board[i][j + 4] == 'w'):
+                    board[i][j + 4] == 'w' and
+                    j < 1 or board[i][j - 1] != 'w' and
+                    j + 5 >= 8 or board[i][j + 5] != 'w'):
                     return 0
                 
                 if (i + 4 < len(board)):
@@ -321,49 +323,59 @@ def newiswin(board):
                         board[i + 1][j + 1] == 'b' and 
                         board[i + 2][j + 2] == 'b' and
                         board[i + 3][j + 3] == 'b' and
-                        board[i + 4][j + 4] == 'b'):
+                        board[i + 4][j + 4] == 'b' and 
+                        i < 1 or j < 1 or board[i - 1][j - 1] != 'b' and
+                        i + 5 >= 8 or j + 5 >= 8 or board[i + 5][j + 5] != 'b'):
                         return 1
                     if (board[i][j] == 'w' and
                         board[i + 1][j + 1] == 'w' and 
                         board[i + 2][j + 2] == 'w' and
                         board[i + 3][j + 3] == 'w' and
-                        board[i + 4][j + 4] == 'w'):
+                        board[i + 4][j + 4] == 'w' and 
+                        i < 1 or j < 1 or board[i - 1][j - 1] != 'w' and
+                        i + 5 >= 8 or j + 5 >= 8 or board[i + 5][j + 5] != 'w'):
                         return 0
                 if (i - 4 >= 0):
                     if (board[i][j] == 'b' and
                         board[i - 1][j + 1] == 'b' and 
                         board[i - 2][j + 2] == 'b' and
                         board[i - 3][j + 3] == 'b' and
-                        board[i - 4][j + 4] == 'b'):
+                        board[i - 4][j + 4] == 'b' and
+                        i + 1 >= 8 or j < 1 or board[i + 1][j - 1] != 'b' and
+                        i < 5 or j + 5 >= 8 or board[i - 5][j + 5] != 'b'):
                         return 1
                     if (board[i][j] == 'w' and
                         board[i - 1][j + 1] == 'w' and 
                         board[i - 2][j + 2] == 'w' and
                         board[i - 3][j + 3] == 'w' and
-                        board[i - 4][j + 4] == 'w'):
+                        board[i - 4][j + 4] == 'w' and 
+                        (i + 1 >= 8 or j < 1 or board[i + 1][j - 1] != 'w') and
+                        (i < 5 or j + 5 >= 8 or board[i - 5][j + 5] != 'w')):
                         return 0
             if (i + 4 < len(board)):
                 if (board[i][j] == 'b' and
                 board[i + 1][j] == 'b' and
                 board[i + 2][j] == 'b' and
                 board[i + 3][j] == 'b' and
-                board[i + 4][j] == 'b'):
+                board[i + 4][j] == 'b' and
+                (i + 5 >= 8 or board[i + 5][j] != 'b') and
+                (i < 1 or board[i - 1][j] != 'b')):
                     return 1
                 if (board[i][j] == 'w' and
                 board[i + 1][j] == 'w' and
                 board[i + 2][j] == 'w' and
                 board[i + 3][j] == 'w' and
-                board[i + 4][j] == 'w'):
+                board[i + 4][j] == 'w' and 
+                (i + 5 >= 8 or board[i + 5][j] != 'w') and
+                (i < 1 or board[i - 1][j] != 'w')):
                     return 0
     if draw:
         return 2
     return 3
-'''
-
 
 def is_win(board):
     states = ["White won", "Black won", "Draw", "Continue Playing"]
-    return states[iswin(board)]                  
+    return states[newiswin(board)]                  
 
 
 def print_board(board): # return void
@@ -624,3 +636,9 @@ def some_tests():
     #        Semi-open rows of length 4: 0
     #        Open rows of length 5: 0
     #        Semi-open rows of length 5: 0
+
+
+if __name__ == '__main__':
+    board = make_empty_board(8)
+    put_seq_on_board(board, 4,0,1,0,3,'b')
+    print(detect_rows(board, 'b', 3))
