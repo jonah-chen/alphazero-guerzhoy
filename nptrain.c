@@ -1,4 +1,4 @@
-/* C code that contains methods that are used for computations like searching the game.
+/* C code that contains methods that are used for computations like searching the game board  
  *
  * Author(s): Jonah Chen, Muhammad Ahsan Kaleem
  */
