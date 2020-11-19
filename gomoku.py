@@ -1,6 +1,6 @@
-"""Basic Gomoku Program for Project 2. Contains: Game, Basic Computer Player, Basic Scoring Polynomial
+'''Basic Gomoku Program for Project 2. Contains: Game, Basic Computer Player, Basic Scoring Polynomial
 Author(s): mak13789, hina
-"""
+'''
 
 # The tuple (d_y, d_x) represent
 # (1,0) direction from left to right (horizontal)
