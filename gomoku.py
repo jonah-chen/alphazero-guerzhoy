@@ -1,6 +1,6 @@
-"""Basic Gomoku Program for Project 2. Contains: Game, Basic Computer Player, Basic Scoring Polynomial
+'''Basic Gomoku Program for Project 2. Contains: Game, Basic Computer Player, Basic Scoring Polynomial
 Author(s): mak13789, hina
-"""
+'''
 
 # The tuple (d_y, d_x) represent
 # (1,0) direction from left to right (horizontal)
@@ -146,7 +146,7 @@ def detect_rows(board, col, length):
 
     return open_seq_count, semi_open_seq_count
 
-
+'''
 def search_max(board):
     move_y, move_x = -1, -1
     max_score = -11111111111111111111111111111111111111111111111
@@ -162,6 +162,29 @@ def search_max(board):
                     max_score = s
                 board[i][j] = ' '
     return move_y, move_x
+'''
+def copy_new(board):    
+    length_board = len(board)
+    new_board = [[' ']*8 for a in range(8)]
+    for c in range(8):
+        for d in range(8):
+            new_board[c][d] = board[c][d]
+    return new_board
+        
+
+def search_max(board):
+    scores_list = []
+    coords_list = []
+    for i in range(8):
+        for j in range(8):
+            if board[i][j] == ' ':
+                new_board = copy_new(board)
+                new_board[i][j] = 'b'
+                coords_list.append((i, j))
+                scores_list.append(score(new_board))
+    ind = scores_list.index(max(scores_list))
+    return coords_list[ind]
+    
 
 
 def score(board): # return int
@@ -375,7 +398,7 @@ def newiswin(board):
 
 def is_win(board):
     states = ["White won", "Black won", "Draw", "Continue playing"]
-    return states[newiswin(board)]                
+    return states[newiswin(board)]                  
 
 
 def print_board(board): # return void
@@ -635,14 +658,3 @@ def some_tests():
     #        Open rows of length 4: 0
     #        Semi-open rows of length 4: 0
     #        Open rows of length 5: 0
-<<<<<<< HEAD
-    #        Semi-open rows of length 5: 0
-
-
-if __name__ == '__main__':
-    board = make_empty_board(8)
-    put_seq_on_board(board, 4,0,1,0,3,'b')
-    print(detect_rows(board, 'b', 3))
-=======
-    #        Semi-open rows of length 5: 0
->>>>>>> 2491ccdfb49e40ca18ea8b607061d668abc009b6
