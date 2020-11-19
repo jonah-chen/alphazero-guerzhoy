@@ -1,3 +1,8 @@
+/* C code that contains methods that are used for computations like searching the game.
+ *
+ * Author(s): Jonah Chen, Muhammad Ahsan Kaleem
+ */
+
 #include <Python.h>
 #include <numpy/ndarrayobject.h>
 #include <numpy/ndarraytypes.h>
