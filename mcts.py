@@ -1,3 +1,6 @@
+"""Implementation of Monte-Carlo Tree Search algorithm.
+"""
+
 import random
 from time import perf_counter
 from copy import copy, deepcopy
@@ -17,10 +20,10 @@ EPSILON = 0.25
 class Node:
     '''Node of the tree for MCTS'''
     def __init__(self, p_a, player):
-        '''ini  tialization function for this class
-        parent: Node
+        """initialization function for this class
         p_a: Probability of the action
-        action: (y,x) signifying a legal move.'''
+        player: The player that is to move.
+        """
         self.N = 0
         self.W = 0
         self.P = p_a
@@ -156,6 +159,7 @@ def search_instance(model, board, player, it=512):
 def optimized_search(model, boards, players, it=512, roots=None):
     """Perform Monte-Carlo Tree Search on a batch of boards with it iterations. 
     Return a list of Node objects, whose children is selected with with a given probability distribution for the next move.
+    More optimized version since it takes a longer per board to predict an array with less boards 
     """
     games = len(boards)
 
@@ -239,7 +243,7 @@ def optimized_search(model, boards, players, it=512, roots=None):
                 nodes[i].expand(policies[i], search_boards[i])
 
         for i in range(games):
-            for bnode in paths[i][::-1]:
+            for bnode in paths[i][:0:-1]:
                 bnode.N += 1
                 if bnode.player == search_players[i]:
                     bnode.W += values[i]

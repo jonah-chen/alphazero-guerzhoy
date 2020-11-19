@@ -1,3 +1,8 @@
+"""Constructs the Neural Network described in D. Silver et. al. Mastering the game of Go without human knowldege, Nature 550, 354-359(2017) doi:10.1038/nature24270.
+
+Author(s): Jonah Chen
+"""
+
 from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
