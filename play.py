@@ -183,5 +183,5 @@ def eval_model(new_model, old_model, games=128):
 
 if __name__ == '__main__':
     model2 = tf.keras.models.load_model('models/2')
-    model4 = tf.keras.models.load_model('models/4')
-    eval_model(model4, model2)
+    model1 = tf.keras.models.load_model('models/1')
+    eval_model(model1, model2)

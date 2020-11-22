@@ -92,8 +92,7 @@ def search_instance(model, board, player, it=512):
     start = perf_counter()
     root = Node(0, player)
     # MUST be batched for training
-    policy, value = model.predict(np.array(
-        [board if player == 1 else np.flip(board, axis=2)]), use_multiprocessing=True)
+    policy, value = model(np.array([board if player == 1 else np.flip(board, axis=2)]), training=False)
     root.expand(policy[0], board)
 
     end = perf_counter()
@@ -136,8 +135,8 @@ def search_instance(model, board, player, it=512):
             if p == 2:
                 search_board = np.flip(search_board, axis=2)
             # MUST be batched for training
-            policy, value = model.predict(
-                np.array([search_board]), use_multiprocessing=True)
+            policy, value = model(np.array([search_board]))
+            policies, values = policies.numpy(), values.numpy()
             node.expand(policy[0], search_board)
 
         end = perf_counter()
@@ -170,8 +169,10 @@ def optimized_search(model, boards, players, it=512, roots=None):
         roots = [Node(0, player) for player in players]
         # Calculate the policies the root nodes
         # Note the values of the root nodes are irrelevent
-        policies, _ = model.predict(np.array([boards[i] if players[i] == 1 else np.flip(
-            boards[i], axis=2) for i in range(games)]), use_multiprocessing=True)
+        policies, _ = model(np.array([boards[i] if players[i] == 1 else np.flip(
+            boards[i], axis=2) for i in range(games)]), training=False)
+        
+        policies = policies.numpy()
 
         # Expand all root nodes
         for i in range(games):
@@ -216,28 +217,27 @@ def optimized_search(model, boards, players, it=512, roots=None):
 
         if rotation:
             if reflection:
-                policies, values = model.predict(
-                    np.rot90(np.flip(search_boards, axis=2),
-                             rotation, (1, 2)),
-                    use_multiprocessing=True)
+                policies, values = model(np.rot90(np.flip(search_boards, axis=2), rotation, (1, 2)), training=False)
+                policies, values = policies.numpy(), values.numpy().flatten()
                 policies = np.flip(
                     np.rot90(policies.reshape(-1, 8, 8,),
                              rotation, (2, 1)), axis=2).reshape(-1, 64,)
             else:
-                policies, values = model.predict(
-                    np.rot90(search_boards, rotation, (1, 2)), use_multiprocessing=True)
+                policies, values = model(np.rot90(search_boards, rotation, (1, 2)), training=False)
+                policies, values = policies.numpy(), values.numpy().flatten()
                 policies = np.rot90(policies.reshape(-1, 8, 8,),
                                     rotation, (2, 1)).reshape(-1, 64,)
         elif reflection:
-            policies, values = model.predict(
-                np.flip(search_boards, axis=2), use_multiprocessing=True)
+            policies, values = model(np.flip(search_boards, axis=2), training=False)
+            policies, values = policies.numpy(), values.numpy().flatten()
             policies = np.flip(policies.reshape(-1, 8, 8,),
                                axis=2).reshape(-1, 64,)
         else:
-            policies, values = model.predict(
-                search_boards, use_multiprocessing=True)
+            policies, values = model(search_boards)
+            policies, values = policies.numpy(), values.numpy().flatten()
 
-        values = values.flatten()
+        
+
         states = [is_win(search_board) for search_board in search_boards]
 
         # Correct the evaluation for games with end states. -1.0 for loss, 0.0 for draw, 1.0 for win.
