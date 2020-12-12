@@ -135,7 +135,7 @@ def search_instance(model, board, player, it=512):
             if p == 2:
                 search_board = np.flip(search_board, axis=2)
             # MUST be batched for training
-            policy, value = model(np.array([search_board]))
+            policy, value = model(np.array([search_board]), training=False)
             policies, values = policies.numpy(), values.numpy()
             node.expand(policy[0], search_board)
 
@@ -233,7 +233,7 @@ def optimized_search(model, boards, players, it=512, roots=None):
             policies = np.flip(policies.reshape(-1, 8, 8,),
                                axis=2).reshape(-1, 64,)
         else:
-            policies, values = model(search_boards)
+            policies, values = model(search_boards, training=False)
             policies, values = policies.numpy(), values.numpy().flatten()
 
         
