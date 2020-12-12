@@ -98,7 +98,7 @@ def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs
         z = np.load(f'selfplay_data/{num}/z.npy')
         s = np.load(f'selfplay_data/{num}/s.npy')
         with ProcessPoolExecutor() as executor:
-            for i in range(max(0, num-20), num):
+            for i in range(max(1, num-20), num):
                 pie = executor.submit(np.append, pie, np.load(
                     f'selfplay_data/{i}/pie.npy'), 0).result()
                 z = executor.submit(np.append, z, np.load(
@@ -138,4 +138,4 @@ def test_model(model, num):
 
 
 if __name__ == '__main__':
-    compile_new_model('models/starter')
+    compile_new_model('models/0.h5')

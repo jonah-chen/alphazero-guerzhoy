@@ -9,16 +9,19 @@ from copy import copy
 from tensorflow.keras.models import load_model
 
 
-model = load_model('models/starter')
-best_model_num = -1
-best_model = copy(model)
+[best_model_num, num] = np.load("config.npy")
 
-for num in range(25):
-    generate_data(num, best_model)
-    train_model(model, num=num, log_name=num, epochs=20)
-    model.save(f'models/{num}')
+model = load_model(f'models/{num}.h5')
+best_model = load_model(f'models/{best_model_num}.h5')
 
-    score, record, black_games, white_games = eval_model(model, best_model)
+while 1:
+    num += 1
+    if num != 1:
+        generate_data(num, best_model, games=200)
+    train_model(model, num=num, log_name=num, epochs=1)
+    model.save(f'models/{num}.h5')
+
+    score, record, black_games, white_games = eval_model(model, best_model, games=100)
 
     # Saves the games. Black first, white second.
     np.save(f'games/{num}v{best_model_num}', black_games)
@@ -30,5 +33,7 @@ for num in range(25):
     if score >= 55:
         best_model = copy(model)
         best_model_num = num
+    
+    np.save("config", np.array([best_model_num, num], dtype=int))
 
     del score, record
