@@ -14,5 +14,6 @@ Write Monte-Carlo Tree Search(MCTS) Algorithm
 Debug (This took way too long lmao)  
 
 TODO:  
-Train network  
-Win!
+Train network (In Progress ~10000 games: I think the agent just learned what a draw is)
+MORE BUGS :(  
+Win!  
