@@ -42,7 +42,12 @@ def check_legal_moves(board):
 
 def move_on_board(board, move, player=1, takeback=False, safe=True):
     """Make a move for player player, or for yourself if no player argument is given.
-     Dangerous function may cause illegal board states"""
+    Dangerous function may cause illegal board states!
+     
+    Raises: ValueError if safe=True and the move is invalid.
+     
+    Returns: void
+    """
     if not takeback and safe:
         if board[move // 8, move % 8, player - 1] > 0.0:
             raise ValueError(
@@ -51,6 +56,11 @@ def move_on_board(board, move, player=1, takeback=False, safe=True):
 
 
 def print_board(board):
+    """Prints the board with delta being you (doggy) and epsilon being your opponent of enemy
+
+    Args:
+        board (np.array): the state of the board to be printed. 
+    """
     s = "  0"
     for i in range(1, 8):
         s += f"|{i}"
@@ -151,6 +161,7 @@ class Game:
 
 
 if __name__ == "__main__":
-    arr = np.load("games/2v3.npy", allow_pickle=True)
-    print(arr[3])
-    print_game(arr[3])
+    arr = np.load("games/60v67.npy", allow_pickle=True)
+    while 1:
+        x = int(input())
+        print_game(arr[x])
