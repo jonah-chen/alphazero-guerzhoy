@@ -14,6 +14,22 @@ Write Monte-Carlo Tree Search(MCTS) Algorithm
 Debug (This took way too long lmao)  
 
 TODO:  
-Train network (In Progress ~10000 games: I think the agent just learned what a draw is.)  
+Train network (In Progress ~13000 games: I think the agent just learned what a draw is.)  
 MORE BUGS :(  
 Win!  
+
+
+Current Progress:  
+
+67 batches of training consisting of 200 games each have been done. 
+
+The accuracy of the policy prediction is given:  
+![Image of policy accuracy](images/first67-acc.png)  
+
+The losses for the training (P+V), policy and value components are shown below:  
+![Image of total loss](images/first67-loss.png)  
+![Image of policy loss](images/first67-ploss.png)  
+![Image of value loss](images/first67-vloss.png)  
+
+There are still some issues of the A.I. losing some games for simple reasons during play. An example is here. These issues are likely able to be resolved with more training.  
+![Image of the GUI](images/model60-flaws.png)
