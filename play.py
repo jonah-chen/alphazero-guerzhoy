@@ -169,7 +169,7 @@ def generate_data(num, model, games=128):
     del s, pie, z
 
 
-def eval_model(new_model, old_model, games=128):
+def eval_model(new_model, old_model, games=128, verbose=True):
     """Play games games with equal chance each model gets white and black and return 
     the score the new_model achieved(0-100), 
     the record [losses, draws, wins], 
@@ -178,6 +178,12 @@ def eval_model(new_model, old_model, games=128):
     as a tuple in order."""
     _, games1, record1 = ai_v_ai(new_model, old_model, games=games//2)
     _, games2, record2 = ai_v_ai(old_model, new_model, games=games//2)
+
+    if verbose:
+        print(f"Black (w/d/l): {record1[2]}/{record1[1]}/{record1[0]}")
+        print(f"White (w/d/l): {record2[0]}/{record2[1]}/{record2[2]}")
+        print(f"Total (w/d/l): {record1[2]+record2[0]}/{record1[1]+record2[1]}/{record1[0]+record2[2]}")
+
     return round(((record1[2]+record2[0])*100 + (record1[1]+record2[1])*50)/games), [record1[0]+record2[2], record1[1]+record2[1], record1[2]+record2[0]], games1, games2
 
 
