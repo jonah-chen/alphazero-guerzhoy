@@ -13,6 +13,7 @@ from tensorflow.keras.layers import Input, Conv2D, Dense, BatchNormalization, Fl
 from tensorflow.keras.losses import mean_squared_error, categorical_crossentropy
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.optimizers import SGD
+from random import randint
 
 from game import Game
 
@@ -84,13 +85,13 @@ def compile_new_model(loc, lr=1e-2, model=None):
         model = build_model()
     print(model.predict(test_vector))
     model.compile(loss=[categorical_crossentropy, mean_squared_error], optimizer=SGD(
-        lr=lr, momentum=0.9), metrics=['accuracy'])
+        lr=lr, momentum=0.9), metrics=['accuracy', 'mean_absolute_error'])
     model.summary()
     print(model.predict(test_vector))
     model.save(loc)
 
 
-def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs=20, batch_size=32):
+def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs=20, batch_size=32, transformations=True, max_history=20):
     """Loads the training data to train the model and trains it with the given parameters.
     """
     if num is not None:
@@ -98,7 +99,7 @@ def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs
         z = np.load(f'selfplay_data/{num}/z.npy')
         s = np.load(f'selfplay_data/{num}/s.npy')
         with ProcessPoolExecutor() as executor:
-            for i in range(max(1, num-20), num):
+            for i in range(max(1, num-max_history), num):
                 pie = executor.submit(np.append, pie, np.load(
                     f'selfplay_data/{i}/pie.npy'), 0).result()
                 z = executor.submit(np.append, z, np.load(
@@ -107,6 +108,17 @@ def train_model(model, num=None, s=None, pie=None, z=None, log_name=None, epochs
                     f'selfplay_data/{i}/s.npy'), 0).result()
     elif s is None or pie is None or z is None:
         raise NotImplementedError(message="Did not recieve training data")
+
+    if transformations:
+        for i in range(s.shape[0]):
+            rotation, reflection = randint(0, 3), randint(0, 1)
+            if rotation:
+                s[i] = np.rot90(s[i], k=rotation, axes=(0, 1))
+                pie[i] = np.rot90(pie[i].reshape(8,8,), k=rotation, axes=(0, 1)).reshape(64)
+            if reflection:
+                s[i] = np.flip(s[i], axis=0)
+                pie[i] = np.flip(pie[i].reshape(8,8), axis=0).reshape(64)
+
 
     if log_name is None:
         model.fit(x=s, y=[pie, z], batch_size=batch_size,
@@ -138,4 +150,8 @@ def test_model(model, num):
 
 
 if __name__ == '__main__':
-    compile_new_model('models/0.h5')
+    # Lmao I gotta recover the models since I made a few mistakes.
+    model = tf.keras.models.load_model("models/86.h5")
+    compile_new_model("models/86.h5", model=model)
+    train_model(model, num=86, epochs=5, log_name="monkaS", max_history=25)
+    model.save("models/86.h5")
