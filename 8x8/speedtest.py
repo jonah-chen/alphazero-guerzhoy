@@ -4,16 +4,12 @@ and an error estimite assuming poission distribtuion.'''
 import tensorflow as tf
 import time
 import numpy as np
-from trainGomoku import init, is_win
-from nptrain import is_win, move_from_policy
-from ai import Game, LOC
+from nptrain import is_win
 import random
-ops = 20
+ops = 1e8
     
 ''' Do not declare functions if not absolutely necessary'''
-model = tf.keras.models.load_model(LOC)
-model.summary()
-x = np.random.rand(1024,8,8,2)
+x = np.random.randint(0,2, size=(8,8,2))
 
 
 k = 0
@@ -28,7 +24,7 @@ start = time.time_ns()
 while k < ops:
     k += 1
     '''Test Code'''
-    y = model.predict(x)
+    y = is_win(x)
     
 
 end = time.time_ns()

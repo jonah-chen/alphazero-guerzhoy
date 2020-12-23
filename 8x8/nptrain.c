@@ -110,7 +110,7 @@ is_win(PyObject* self, PyObject* args) {
 
     if (is_draw(board))
     {
-        free(board);
+        PyArray_Free(list3_obj, (void*)&board);
         return Py_BuildValue("i", 3);
     }
 
@@ -132,7 +132,7 @@ is_win(PyObject* self, PyObject* args) {
                     board[y][x + 3][0] &&
                     board[y][x + 4][0])
                 {
-                    free(board);
+                    PyArray_Free(list3_obj, (void*)board);
                     return Py_BuildValue("i", 1);
                 }
 
@@ -142,7 +142,7 @@ is_win(PyObject* self, PyObject* args) {
                     board[y][x + 3][1] &&
                     board[y][x + 4][1])
                 {
-                    free(board);
+                    PyArray_Free(list3_obj, (void*)board);
                     return Py_BuildValue("i", 2);
                 }
                 // diagonal case
@@ -154,7 +154,7 @@ is_win(PyObject* self, PyObject* args) {
                         board[y + 3][x + 3][0] &&
                         board[y + 4][x + 4][0])
                     {
-                        free(board);
+                        PyArray_Free(list3_obj, (void*)board);
                         return Py_BuildValue("i", 1);
                     }
                     if (board[y][x][1] &&
@@ -163,7 +163,7 @@ is_win(PyObject* self, PyObject* args) {
                         board[y + 3][x + 3][1] &&
                         board[y + 4][x + 4][1])
                     {
-                        free(board);
+                        PyArray_Free(list3_obj, (void*)board);
                         return Py_BuildValue("i", 2);
                     }
                 }
@@ -175,7 +175,7 @@ is_win(PyObject* self, PyObject* args) {
                         board[y - 3][x + 3][0] &&
                         board[y - 4][x + 4][0])
                     {
-                        free(board);
+                        PyArray_Free(list3_obj, (void*)board);
                         return Py_BuildValue("i", 1);
                     }
                     if (board[y][x][1] &&
@@ -184,7 +184,7 @@ is_win(PyObject* self, PyObject* args) {
                         board[y - 3][x + 3][1] &&
                         board[y - 4][x + 4][1])
                     {
-                        free(board);
+                        PyArray_Free(list3_obj, (void*)board);
                         return Py_BuildValue("i", 2);
                     }
                 }
@@ -198,7 +198,7 @@ is_win(PyObject* self, PyObject* args) {
                 board[y + 3][x][0] &&
                 board[y + 4][x][0])
                 {
-                    free(board);
+                    PyArray_Free(list3_obj, (void*)board);
                     return Py_BuildValue("i", 1);
                 }
                 if (board[y][x][1] &&
@@ -207,13 +207,13 @@ is_win(PyObject* self, PyObject* args) {
                 board[y + 3][x][1] &&
                 board[y + 4][x][1])
                 {
-                    free(board);
+                    PyArray_Free(list3_obj, (void*)board);
                     return Py_BuildValue("i", 2);
                 }
             }
         }
     }
-    free(board);
+    PyArray_Free(list3_obj, (void*)&board);
     return Py_BuildValue("i", 0);
 }
 
