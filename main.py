@@ -14,6 +14,7 @@ from tensorflow.keras.models import load_model
 model = load_model(f'models/{num}.h5')
 best_model = load_model(f'models/{best_model_num}.h5')
 
+
 while 1:
     num += 1
     generate_data(num, best_model, games=200)

@@ -152,6 +152,6 @@ def test_model(model, num):
 if __name__ == '__main__':
     # Lmao I gotta recover the models since I made a few mistakes.
     model = tf.keras.models.load_model("models/86.h5")
-    compile_new_model("models/86.h5", model=model)
-    train_model(model, num=86, epochs=5, log_name="monkaS", max_history=25)
+    for i in range(1, 10):
+        train_model(model, num=86, epochs=1, log_name=f"monkaS{i}", max_history=25)
     model.save("models/86.h5")

@@ -658,3 +658,6 @@ def some_tests():
     #        Open rows of length 4: 0
     #        Semi-open rows of length 4: 0
     #        Open rows of length 5: 0
+
+if __name__ == '__main__':
+    play_gomoku(8)

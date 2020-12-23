@@ -9,7 +9,7 @@ from nptrain import is_win
 root = Tk()
 root.title("Play AlphaZero Guerzhoy")
 
-GOOD_MODELS = [0,2,8,9,13,19,24,35,39,58,60,67]
+GOOD_MODELS = [0,2,8,9,13,19,24,35,39,58,60,91,101]
 black_stone = ImageTk.PhotoImage(Image.open("images/blackstone.png").resize((100,100)))
 white_stone = ImageTk.PhotoImage(Image.open("images/whitestone.png").resize((100,100)))
 
@@ -154,7 +154,7 @@ def init_game():
     Button(root, text="White", command=play_as_white).grid(row=8, column=4)
 
     model_select = [Button(root, text=f"{i}", command=lambda: load(i)) for i in range(len(GOOD_MODELS)-1)]
-    model_select.append(Button(root, text="BETA", command=lambda: load(-1)))
+    model_select.append(Button(root, text="12", command=lambda: load(-1)))
 
     for i in range(len(GOOD_MODELS)):
         model_select[i].grid(row=9, column=i)
