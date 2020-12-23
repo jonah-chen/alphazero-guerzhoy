@@ -16,7 +16,20 @@ from game import move_on_board
 from nptrain import *
 
 
-def self_play(model, games=128, game_iter=64, search_iter=512):
+def self_play(model, games=128, game_iter=64, search_iter=512, gamma=1):
+    """The model performs self play to generate training data.
+
+    Args:
+        model (tf.keras.models.Model): The model that will be predicting the policies and values for self players
+        games (int, optional): The number of games in this batch of self players. Defaults to 128.
+        game_iter (int, optional): The maximum length of the games. Defaults to 64.
+        search_iter (int, optional): The number of iterations of MCTS that is performed to make each moves. Defaults to 512.
+        gamma (float, optional): The discounting factor for the rewards. A value of 1 means no discounting. Defaults to 1.
+    Returns:
+        s (list of numpy arrays): A list of the boards that are a result of each state of the every game.
+        pie (list of numpy arrays): A list of arrays of the policies generated from the monte-carlo tree search. 
+        z (list of int): A list of the value (result or diminished result) of each of the games.
+    """
     boards = np.zeros((games, 8, 8, 2,), dtype="float32")
     players = [1]*games
     inputs = None
@@ -57,9 +70,9 @@ def self_play(model, games=128, game_iter=64, search_iter=512):
                 s.append(game_boards.pop(i))
                 pie.append(mcts_policies.pop(i))
                 if state == 1:
-                    z.append([1 - 2 * (k % 2) for k in range(turns+1)])
+                    z.append([(1 - 2 * (k % 2))*gamma**(turns-k) for k in range(turns+1)])
                 elif state == 2:
-                    z.append([2 * (k % 2) - 1 for k in range(turns+1)])
+                    z.append([(2 * (k % 2) - 1)*gamma**(turns-k) for k in range(turns+1)])
                 elif state == 3:
                     z.append([0]*(turns+1))
                 boards = np.delete(boards, i, axis=0)
