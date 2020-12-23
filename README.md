@@ -13,7 +13,7 @@ You can play the A.I. by executing the play_alphazero-guerzhoy.py file in a GUI 
 
 ![Image of the GUI](images/defeated-simple-ai.png)
 
-Note: If you want to play against the A.I.s, you need the required dependencies (tensorflow). If you are not on linux, you must recompile the nptrain library by executing `python3 build nptrainsetup.py` in your terminal and copying the respective file from the build directory.  
+Note: If you want to play against the A.I.s, you need the required dependencies (tensorflow). If you are not on linux, you must recompile the nptrain library by executing `python3 build nptrainsetup.py` in your terminal and copying the respective file from the build directory. You may also have to change the file paths for all the code that loads files if you are on Windows. (remember to escape the backslashes in the fiile extention)
 
 #### Training
 For training, the batch size is set to be 32 (not sure if that is good or bad) and the metrics from training are shown. Note that the jump in the graph is there as I have forgot to rotate the boards during training, causing the first batches of training to be not as effective.
