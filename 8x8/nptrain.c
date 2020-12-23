@@ -110,7 +110,7 @@ is_win(PyObject* self, PyObject* args) {
 
     if (is_draw(board))
     {
-        PyArray_Free(list3_obj, (void*)&board);
+        PyArray_Free(list3_obj, (void*)board);
         return Py_BuildValue("i", 3);
     }
 
@@ -213,7 +213,7 @@ is_win(PyObject* self, PyObject* args) {
             }
         }
     }
-    PyArray_Free(list3_obj, (void*)&board);
+    PyArray_Free(list3_obj, (void*)board);
     return Py_BuildValue("i", 0);
 }
 
