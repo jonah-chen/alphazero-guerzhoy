@@ -17,7 +17,7 @@ best_model = load_model(f'models/{best_model_num}.h5')
 
 while 1:
     num += 1
-    generate_data(num, best_model, games=200)
+    generate_data(num, best_model, games=256, gamma=0.97)
     train_model(model, num=num, log_name=num, epochs=1)
     model.save(f'models/{num}.h5')
 

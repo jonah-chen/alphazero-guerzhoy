@@ -156,7 +156,7 @@ def ai_v_ai(black, white, games=64, game_iter=225, search_iter=512, tau=0):
     return round((100*wins+50*draws)/games), np.array(save_games), [losses, draws, wins]
 
 
-def generate_data(num, model, games=128, search_iter=512):
+def generate_data(num, model, games=128, search_iter=512, gamma=1):
     global true_start
     true_start = perf_counter()
 
@@ -165,7 +165,7 @@ def generate_data(num, model, games=128, search_iter=512):
     np.save(f'selfplay_data/{num}/_test', np.zeros(1,))
     print("Directory created succesfully.")
 
-    s, pie, z = self_play(model, games=games, search_iter=search_iter)
+    s, pie, z = self_play(model, games=games, search_iter=search_iter, gamma=gamma)
 
     start = perf_counter()
     with ProcessPoolExecutor() as executor:
@@ -182,15 +182,15 @@ def generate_data(num, model, games=128, search_iter=512):
     del s, pie, z
 
 
-def eval_model(new_model, old_model, games=128, verbose=True):
+def eval_model(new_model, old_model, games=128, verbose=True, search_iter=512):
     """Play games games with equal chance each model gets white and black and return 
     the score the new_model achieved(0-100), 
     the record [losses, draws, wins], 
     the games played with black, 
     the games played with white 
     as a tuple in order."""
-    _, games1, record1 = ai_v_ai(new_model, old_model, games=games//2)
-    _, games2, record2 = ai_v_ai(old_model, new_model, games=games//2)
+    _, games1, record1 = ai_v_ai(new_model, old_model, games=games//2, search_iter=512)
+    _, games2, record2 = ai_v_ai(old_model, new_model, games=games//2, search_iter=512)
 
     if verbose:
         print(f"Black (w/d/l): {record1[2]}/{record1[1]}/{record1[0]}")

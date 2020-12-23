@@ -21,7 +21,7 @@ while 1:
     train_model(model, num=num, log_name=num, epochs=1)
     model.save(f'models/{num}.h5')
 
-    score, record, black_games, white_games = eval_model(model, best_model, games=50)
+    score, record, black_games, white_games = eval_model(model, best_model, games=50, search_iter=1024)
 
     # Saves the games. Black first, white second.
     np.save(f'games/{num}v{best_model_num}', black_games)

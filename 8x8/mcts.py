@@ -181,7 +181,7 @@ def optimized_search(model, boards, players, it=512, roots=None):
     start = perf_counter()
     # Performs the search
     for _ in range(it):
-        if _ % 32 == 31:
+        if _ % 128 == 127:
             end = perf_counter()
             print(f'iteration:{_+1} of {it} time:{(end-start):.2f}s')
             start = perf_counter()
