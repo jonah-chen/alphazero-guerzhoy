@@ -7,7 +7,87 @@
 #include <numpy/ndarrayobject.h>
 #include <numpy/ndarraytypes.h>
 #include <math.h>
-#define SIZE 8
+#define SIZE 15
+
+int is_draw(double ***board)
+{
+    int x, y;
+    // Check if there is a win
+    y = SIZE;
+    while (y--)
+    {
+        x = SIZE;
+        while (x--)
+        {
+            // horizontal case:
+            if (x + 4 < SIZE)
+            {
+                if (!board[y][x][0] &&
+                    !board[y][x + 1][0] && 
+                    !board[y][x + 2][0] &&
+                    !board[y][x + 3][0] &&
+                    !board[y][x + 4][0])
+                    return 0;
+
+                if (!board[y][x][1] &&
+                    !board[y][x + 1][1] && 
+                    !board[y][x + 2][1] &&
+                    !board[y][x + 3][1] &&
+                    !board[y][x + 4][1])
+                    return 0;
+                // diagonal case
+                if (y + 4 < SIZE)
+                {
+                    if (!board[y][x][0] &&
+                        !board[y + 1][x + 1][0] && 
+                        !board[y + 2][x + 2][0] &&
+                        !board[y + 3][x + 3][0] &&
+                        !board[y + 4][x + 4][0])
+                        return 0;
+                    if (!board[y][x][1] &&
+                        !board[y + 1][x + 1][1] && 
+                        !board[y + 2][x + 2][1] &&
+                        !board[y + 3][x + 3][1] &&
+                        !board[y + 4][x + 4][1])
+                        return 0;
+                }
+                if (y - 4 >= 0)
+                {
+                    if (!board[y][x][0] &&
+                        !board[y - 1][x + 1][0] && 
+                        !board[y - 2][x + 2][0] &&
+                        !board[y - 3][x + 3][0] &&
+                        !board[y - 4][x + 4][0])
+                        return 0;
+                    if (!board[y][x][1] &&
+                        !board[y - 1][x + 1][1] && 
+                        !board[y - 2][x + 2][1] &&
+                        !board[y - 3][x + 3][1] &&
+                        !board[y - 4][x + 4][1])
+                        return 0;
+                }
+            }
+            // vertical case:
+            if (y + 4 < SIZE)
+            {
+                if (!board[y][x][0] &&
+                    !board[y + 1][x][0] &&
+                    !board[y + 2][x][0] &&
+                    !board[y + 3][x][0] &&
+                    !board[y + 4][x][0])
+                    return 0;
+                if (!board[y][x][1] &&
+                    !board[y + 1][x][1] &&
+                    !board[y + 2][x][1] &&
+                    !board[y + 3][x][1] &&
+                    !board[y + 4][x][1])
+                    return 0;
+            }
+        }
+    }
+    // if no one wins, it's a draw
+    return 1;
+}
 
 static PyObject* 
 is_win(PyObject* self, PyObject* args) {
@@ -27,16 +107,22 @@ is_win(PyObject* self, PyObject* args) {
         PyErr_SetString(PyExc_TypeError, "error converting to c array");
         return NULL;
     }
-    
-    int y = SIZE;
-    unsigned char draw = 1;
+
+    if (is_draw(board))
+    {
+        free(board);
+        return Py_BuildValue("i", 3);
+    }
+
+    /* The game is not an automatic draw. Thus, check if the game is won or lost or continue playing */
+    int y, x;
+
+    y = SIZE;
     while (y--)
     {
-        int x = SIZE;
+        x = SIZE;
         while (x--)
         {
-            if (draw && !board[y][x][0] && !board[y][x][1])
-                draw = 0;
             // horizontal case:
             if (x + 4 < SIZE)
             {
@@ -45,13 +131,21 @@ is_win(PyObject* self, PyObject* args) {
                     board[y][x + 2][0] &&
                     board[y][x + 3][0] &&
                     board[y][x + 4][0])
+                {
+                    free(board);
                     return Py_BuildValue("i", 1);
+                }
+
                 if (board[y][x][1] &&
                     board[y][x + 1][1] && 
                     board[y][x + 2][1] &&
                     board[y][x + 3][1] &&
                     board[y][x + 4][1])
+                {
+                    free(board);
                     return Py_BuildValue("i", 2);
+                }
+                // diagonal case
                 if (y + 4 < SIZE)
                 {
                     if (board[y][x][0] &&
@@ -59,13 +153,19 @@ is_win(PyObject* self, PyObject* args) {
                         board[y + 2][x + 2][0] &&
                         board[y + 3][x + 3][0] &&
                         board[y + 4][x + 4][0])
+                    {
+                        free(board);
                         return Py_BuildValue("i", 1);
+                    }
                     if (board[y][x][1] &&
                         board[y + 1][x + 1][1] && 
                         board[y + 2][x + 2][1] &&
                         board[y + 3][x + 3][1] &&
                         board[y + 4][x + 4][1])
+                    {
+                        free(board);
                         return Py_BuildValue("i", 2);
+                    }
                 }
                 if (y - 4 >= 0)
                 {
@@ -74,13 +174,19 @@ is_win(PyObject* self, PyObject* args) {
                         board[y - 2][x + 2][0] &&
                         board[y - 3][x + 3][0] &&
                         board[y - 4][x + 4][0])
+                    {
+                        free(board);
                         return Py_BuildValue("i", 1);
+                    }
                     if (board[y][x][1] &&
                         board[y - 1][x + 1][1] && 
                         board[y - 2][x + 2][1] &&
                         board[y - 3][x + 3][1] &&
                         board[y - 4][x + 4][1])
+                    {
+                        free(board);
                         return Py_BuildValue("i", 2);
+                    }
                 }
             }
             // vertical case:
@@ -91,18 +197,23 @@ is_win(PyObject* self, PyObject* args) {
                 board[y + 2][x][0] &&
                 board[y + 3][x][0] &&
                 board[y + 4][x][0])
+                {
+                    free(board);
                     return Py_BuildValue("i", 1);
+                }
                 if (board[y][x][1] &&
                 board[y + 1][x][1] &&
                 board[y + 2][x][1] &&
                 board[y + 3][x][1] &&
                 board[y + 4][x][1])
+                {
+                    free(board);
                     return Py_BuildValue("i", 2);
+                }
             }
         }
     }
-    if (draw)
-        return Py_BuildValue("i", 3);
+    free(board);
     return Py_BuildValue("i", 0);
 }
 
